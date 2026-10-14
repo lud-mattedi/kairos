@@ -618,8 +618,12 @@ html, body {
   animation: voicePulse 1.5s infinite;
 }
 
-/* iOS Bottom Tab Bar (Apple Human Interface Guidelines) */
-.ios-tab-bar {
+/* iOS Bottom Tab Bar & Mobile Controls (Desktop Hidden) */
+.ios-tab-bar,
+.mobile-telemetry-pill,
+.mobile-capture-btn,
+.mobile-settings-btn,
+.mobile-subnav {
   display: none;
 }
 
@@ -638,6 +642,14 @@ html, body {
     padding-bottom: 0.5rem;
   }
 
+  .header-inner {
+    gap: 0.5rem;
+  }
+
+  .brand {
+    gap: 0.5rem;
+  }
+
   .brand-subtitle {
     display: none; /* Hide subtitle on phone to avoid line-wrap */
   }
@@ -651,9 +663,41 @@ html, body {
     height: 1.9rem;
   }
 
+  .header-controls {
+    gap: 0.4rem;
+  }
+
   /* Hide bulky desktop selectors from top bar on iPhone */
   .desktop-only-control {
     display: none !important;
+  }
+
+  .mobile-telemetry-pill {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.35rem;
+    background: var(--accent-sage-dim);
+    border: 1px solid rgba(118, 142, 122, 0.4);
+    border-radius: 999px;
+    padding: 0.25rem 0.55rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--accent-sage-soft);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .telemetry-pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-sage-soft);
+    animation: pulseDot 2s infinite ease-in-out;
+  }
+
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
   }
 
   .mobile-capture-btn {
@@ -662,9 +706,57 @@ html, body {
     justify-content: center;
     width: 2.1rem;
     height: 2.1rem;
-    border-radius: 4px;
+    border-radius: 6px;
     background: var(--accent-amber);
     color: #0C0E12;
+    border: none;
+    box-shadow: 0 2px 8px rgba(212, 163, 89, 0.25);
+  }
+
+  .mobile-settings-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 6px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+  }
+
+  /* Horizontal swipeable pill strip for all 8 modules on iOS */
+  .mobile-subnav {
+    display: flex !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    background: rgba(16, 20, 24, 0.95);
+    border-bottom: 1px solid var(--border-subtle);
+    scrollbar-width: none;
+  }
+  .mobile-subnav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-nav-chip {
+    flex-shrink: 0;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    transition: all 0.15s ease;
+  }
+
+  .mobile-nav-chip.active {
+    color: var(--accent-amber-soft);
+    background: var(--accent-amber-dim);
+    border-color: rgba(212, 163, 89, 0.5);
+    font-weight: 600;
   }
 
   /* Hide horizontal top scrollable tabs on iPhone */
@@ -683,6 +775,31 @@ html, body {
     gap: 1.25rem;
   }
 
+  .capacity-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .capacity-header > div:last-child {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .capacity-header .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .the-big-one-card {
+    padding: 1rem;
+  }
+
+  .the-big-one-card .big-one-title {
+    font-size: 1.15rem;
+  }
+
   .simulation-banner {
     flex-direction: column;
     padding: 1rem;
@@ -699,8 +816,13 @@ html, body {
     grid-template-columns: 1fr;
   }
 
+  .demand-top {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
   .chat-shell {
-    height: calc(100vh - 170px);
+    height: calc(100vh - 180px);
   }
 
   /* Bottom Navigation Bar */
@@ -711,11 +833,11 @@ html, body {
     left: 0;
     right: 0;
     z-index: 60;
-    background: rgba(12, 14, 18, 0.92);
+    background: rgba(12, 14, 18, 0.94);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border-top: 1px solid var(--border-subtle);
-    padding-top: 0.5rem;
+    padding-top: 0.45rem;
     padding-bottom: max(0.6rem, env(safe-area-inset-bottom));
     justify-content: space-around;
     align-items: center;
@@ -757,10 +879,10 @@ html, body {
   .modal-sheet {
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
-    border-top-left-radius: 12px !important;
-    border-top-right-radius: 12px !important;
+    border-top-left-radius: 16px !important;
+    border-top-right-radius: 16px !important;
     max-height: 85vh;
     overflow-y: auto;
-    padding-bottom: max(1.5rem, env(safe-area-inset-bottom)) !important;
+    padding: 1.25rem 1.1rem max(1.5rem, env(safe-area-inset-bottom)) 1.1rem !important;
   }
 }

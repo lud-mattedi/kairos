@@ -27,7 +27,9 @@ import {
   Mic,
   Download,
   Key,
-  History
+  History,
+  Shield,
+  ArrowRight
 } from 'lucide-react';
 import type { Demand, CoachPosture, EnergyState, DelegationItem, MemoryFact, ChatMessage, LifeDomain } from './types';
 import { storageService } from './services/storageService';
@@ -275,19 +277,19 @@ export default function App() {
           </div>
 
           <div className="header-controls">
-            {/* Version Snapshot Pill */}
+            {/* Version Snapshot Pill (Desktop) */}
             <button 
-              className="selector-pill" 
+              className="selector-pill desktop-only-control" 
               onClick={() => setShowVersionModal(true)}
               title="Clique para ver o histórico de snapshots e restaurar versões anteriores"
               style={{ cursor: 'pointer' }}
             >
               <History size={13} color="var(--accent-amber-soft)" />
-              <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>v1.1 Executive</span>
+              <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>v1.2 iOS</span>
             </button>
 
-            {/* Energy Selector */}
-            <div className="selector-pill" title="Seu estado biológico atual ajusta as recomendações da IA">
+            {/* Energy Selector (Desktop) */}
+            <div className="selector-pill desktop-only-control" title="Seu estado biológico atual ajusta as recomendações da IA">
               <Zap size={14} color="var(--accent-amber)" />
               <span>Energia:</span>
               <select 
@@ -300,8 +302,8 @@ export default function App() {
               </select>
             </div>
 
-            {/* Coach Posture Selector */}
-            <div className="selector-pill" title="Ajuste como a IA interage e desafia suas escolhas">
+            {/* Coach Posture Selector (Desktop) */}
+            <div className="selector-pill desktop-only-control" title="Ajuste como a IA interage e desafia suas escolhas">
               <BrainCircuit size={14} color="var(--accent-sage-soft)" />
               <span>Postura IA:</span>
               <select 
@@ -314,15 +316,52 @@ export default function App() {
               </select>
             </div>
 
+            {/* Primary Capture Button (Desktop) */}
             <button 
-              className="btn-primary" 
+              className="btn-primary desktop-only-control" 
               onClick={() => setShowNewDemandModal(true)}
             >
               <Plus size={16} /> Capturar Demanda
             </button>
+
+            {/* Mobile Header Actions (Stitch iPhone Pattern) */}
+            <div className="mobile-telemetry-pill">
+              <span className="telemetry-pulse"></span>
+              <span>Buffer 28%</span>
+            </div>
+
+            <button 
+              className="mobile-capture-btn" 
+              onClick={() => setShowNewDemandModal(true)}
+              title="Capturar Nova Demanda"
+              aria-label="Capturar Demanda"
+            >
+              <Plus size={18} />
+            </button>
+
+            <button 
+              className="mobile-settings-btn" 
+              onClick={() => setShowVersionModal(true)}
+              title="Configurações e Snapshots"
+              aria-label="Configurações e Snapshots"
+            >
+              <History size={16} />
+            </button>
           </div>
         </div>
       </header>
+
+      {/* Mobile Horizontal Subnav (Quick Category Chips) */}
+      <div className="mobile-subnav" aria-label="Navegação rápida de módulos">
+        <button className={`mobile-nav-chip ${activeTab === 'today' ? 'active' : ''}`} onClick={() => setActiveTab('today')}>1. Cockpit</button>
+        <button className={`mobile-nav-chip ${activeTab === 'inbox' ? 'active' : ''}`} onClick={() => setActiveTab('inbox')}>2. Triagem ({demands.length})</button>
+        <button className={`mobile-nav-chip ${activeTab === 'showcase' ? 'active' : ''}`} onClick={() => setActiveTab('showcase')}>3. 5 Casos</button>
+        <button className={`mobile-nav-chip ${activeTab === 'procrastination' ? 'active' : ''}`} onClick={() => setActiveTab('procrastination')}>4. SOS Foco</button>
+        <button className={`mobile-nav-chip ${activeTab === 'boundaries' ? 'active' : ''}`} onClick={() => setActiveTab('boundaries')}>5. Liderança</button>
+        <button className={`mobile-nav-chip ${activeTab === 'sparring' ? 'active' : ''}`} onClick={() => setActiveTab('sparring')}>6. Coach IA</button>
+        <button className={`mobile-nav-chip ${activeTab === 'softLanding' ? 'active' : ''}`} onClick={() => setActiveTab('softLanding')}>7. Retomada</button>
+        <button className={`mobile-nav-chip ${activeTab === 'memory' ? 'active' : ''}`} onClick={() => setActiveTab('memory')}>8. Memória</button>
+      </div>
 
       {/* Main Tab Navigation */}
       <nav className="nav-bar">
@@ -384,6 +423,56 @@ export default function App() {
         {/* ----------------- TAB 1: COCKPIT DO DIA & CAPACIDADE ----------------- */}
         {activeTab === 'today' && (
           <div>
+            {/* Executive Greeting Header (Stitch Mobile Pattern) */}
+            <div className="executive-greeting">
+              <div className="greeting-row">
+                <h1 className="greeting-title">Bom dia, Rodrigo</h1>
+                <span className="greeting-date">
+                  {new Date().toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' }).toUpperCase()}
+                </span>
+              </div>
+              <div className="greeting-tags">
+                <span className="badge badge-amber">
+                  <ShieldAlert size={12} /> Modo: Retomada sem Culpa Ativo
+                </span>
+                <span className="badge badge-sage">
+                  <Shield size={12} /> Buffer 28% Preservado
+                </span>
+                <span className="badge badge-sage">
+                  <Zap size={12} /> Energia: {currentEnergy}
+                </span>
+              </div>
+            </div>
+
+            {/* The Big One Card (Stitch Focus Anchor) */}
+            <div className="the-big-one-card">
+              <div className="big-one-header">
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <span className="big-one-tag">O Foco do Dia</span>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>INEGOCIÁVEL</span>
+                </div>
+                <span className="badge badge-amber" style={{ fontSize: '0.72rem' }}>
+                  <Clock size={12} /> SLA 10:30
+                </span>
+              </div>
+              <h3 className="big-one-title">Acompanhar entrega crítica do Squad Alfa</h3>
+              <p className="big-one-action">
+                Critérios de Aceite definidos. Revisão arquitetural do pipeline e validação do deploy de staging sem bloqueios para a diretoria.
+              </p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-subtle)', paddingTop: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <span style={{ fontSize: '0.78rem', color: 'var(--accent-sage-soft)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <CheckCircle2 size={14} /> Critérios Validados (3/3)
+                </span>
+                <button 
+                  className="btn-primary" 
+                  style={{ fontSize: '0.8rem', padding: '0.4rem 0.8rem' }}
+                  onClick={() => setActiveTab('boundaries')}
+                >
+                  Iniciar Alinhamento <ArrowRight size={14} />
+                </button>
+              </div>
+            </div>
+
             {/* Capacity Budget Card */}
             <div className="capacity-card">
               <div className="capacity-header">
@@ -1290,43 +1379,92 @@ export default function App() {
 
       {/* ----------------- MODAL: HISTÓRICO DE VERSÕES ----------------- */}
       {showVersionModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem' }}>
-          <div className="wizard-box" style={{ width: '100%', maxWidth: '580px' }}>
+        <div className="modal-backdrop" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem' }}>
+          <div className="wizard-box modal-sheet" style={{ width: '100%', maxWidth: '580px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <History size={18} color="var(--accent-amber-soft)" />
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 600 }}>Histórico de Versões & Garantia de Retorno</h3>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 600 }}>Configurações & Histórico de Versões</h3>
               </div>
               <button className="btn-ghost" onClick={() => setShowVersionModal(false)}>
                 <X size={18} />
               </button>
             </div>
 
-            <p style={{ fontSize: '0.83rem', color: 'var(--text-secondary)', marginBottom: '1.25rem', lineHeight: 1.6 }}>
-              Você pediu que sempre mantivéssemos a versão anterior acessível. O repositório possui controle de versão duplo (Git Tags e pasta física de snapshots):
+            {/* Mobile Fast Controls for Energy & Posture */}
+            <div style={{ background: 'rgba(212, 163, 89, 0.08)', border: '1px solid rgba(212, 163, 89, 0.3)', borderRadius: '6px', padding: '0.85rem', marginBottom: '1.25rem' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--accent-amber-soft)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                Ajuste Biológico & Postura da IA
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
+                <div>
+                  <label style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.2rem' }}>Energia Atual</label>
+                  <select 
+                    value={currentEnergy} 
+                    onChange={(e) => setCurrentEnergy(e.target.value as EnergyState)}
+                    style={{ width: '100%', background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '0.4rem', color: 'var(--text-main)', fontSize: '0.8rem' }}
+                  >
+                    <option value="Alta">Alta ⚡ (Foco Nobre)</option>
+                    <option value="Média">Média ⚖️ (Coordenação)</option>
+                    <option value="Baixa">Baixa 🔋 (Recarga)</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.2rem' }}>Postura do Coach</label>
+                  <select 
+                    value={coachPosture} 
+                    onChange={(e) => setCoachPosture(e.target.value as CoachPosture)}
+                    style={{ width: '100%', background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '0.4rem', color: 'var(--text-main)', fontSize: '0.8rem' }}
+                  >
+                    <option value="Guardião Firme">Guardião Firme 🛡️</option>
+                    <option value="Parceiro Empático">Parceiro Empático 🤝</option>
+                    <option value="Assistente Pragmático">Assistente Pragmático ⚙️</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <p style={{ fontSize: '0.83rem', color: 'var(--text-secondary)', marginBottom: '1rem', lineHeight: 1.6 }}>
+              Conforme sua diretriz, mantemos sempre as versões anteriores salvas com garantia total de retorno (Git Tags e Snapshots em disco):
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '1.5rem' }}>
-              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', padding: '0.85rem', borderRadius: '4px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', padding: '0.75rem', borderRadius: '4px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
-                  <strong style={{ color: 'var(--accent-amber-soft)', fontSize: '0.88rem' }}>v1.1 Executive Sanctuary (Atual)</strong>
+                  <strong style={{ color: 'var(--accent-amber-soft)', fontSize: '0.85rem' }}>v1.2 iOS Pixel-Perfect (Atual)</strong>
                   <span className="badge badge-amber">Ativa</span>
                 </div>
                 <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-                  Adoção da paleta e tipografia do Google Stitch (Newsreader + Inter), persistência LocalStorage, integração Gemini API e exportação ICS de agenda.
+                  Mobile-first iOS Safari: Safe Area Insets, Telemetria Buffer 28%, The Big One, bottom navigation e modal sheets.
                 </p>
+                <div style={{ marginTop: '0.4rem', fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                  Tag: v1.2-ios-ready • snapshots/v1.2-ios-ready/
+                </div>
               </div>
 
-              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', padding: '0.85rem', borderRadius: '4px' }}>
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', padding: '0.75rem', borderRadius: '4px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
-                  <strong style={{ color: 'var(--text-main)', fontSize: '0.88rem' }}>v1.0 Baseline (Snapshot Arquivado)</strong>
-                  <span className="badge badge-sage">Tag Git: v1.0-baseline</span>
+                  <strong style={{ color: 'var(--text-main)', fontSize: '0.85rem' }}>v1.1 Executive Sanctuary</strong>
+                  <span className="badge badge-sage">Snapshot</span>
                 </div>
                 <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-                  Versão inicial estável com os 8 módulos interativos e demonstração prática das 5 demandas.
+                  Design System do Stitch (Newsreader + Inter), LocalStorage, Gemini API e exportação ICS.
                 </p>
-                <div style={{ marginTop: '0.5rem', fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                  Local físico salvo em: snapshots/v1.0-baseline/
+                <div style={{ marginTop: '0.4rem', fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                  Tag: v1.1-executive-sanctuary • snapshots/v1.1-executive-sanctuary/
+                </div>
+              </div>
+
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', padding: '0.75rem', borderRadius: '4px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
+                  <strong style={{ color: 'var(--text-main)', fontSize: '0.85rem' }}>v1.0 Baseline</strong>
+                  <span className="badge badge-sage">Snapshot</span>
+                </div>
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                  Versão inicial estável com os 8 módulos e 5 casos de estudo.
+                </p>
+                <div style={{ marginTop: '0.4rem', fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                  Tag: v1.0-baseline • snapshots/v1.0-baseline/
                 </div>
               </div>
             </div>
@@ -1342,8 +1480,8 @@ export default function App() {
 
       {/* ----------------- MODAL: CAPTURA RÁPIDA ----------------- */}
       {showNewDemandModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem' }}>
-          <div className="wizard-box" style={{ width: '100%', maxWidth: '520px' }}>
+        <div className="modal-backdrop" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem' }}>
+          <div className="wizard-box modal-sheet" style={{ width: '100%', maxWidth: '520px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 600 }}>Capturar Pensamento / Demanda</h3>
               <button className="btn-ghost" onClick={() => setShowNewDemandModal(false)}>
@@ -1392,8 +1530,8 @@ export default function App() {
 
       {/* ----------------- MODAL: INSPECIONAR DEMANDA ----------------- */}
       {inspectDemand && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem' }}>
-          <div className="wizard-box" style={{ width: '100%', maxWidth: '600px' }}>
+        <div className="modal-backdrop" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem' }}>
+          <div className="wizard-box modal-sheet" style={{ width: '100%', maxWidth: '600px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <div>
                 <span className="badge badge-amber">{inspectDemand.category}</span>
@@ -1468,14 +1606,6 @@ export default function App() {
         </button>
 
         <button 
-          className={`ios-tab-item ${activeTab === 'showcase' ? 'active' : ''}`}
-          onClick={() => setActiveTab('showcase')}
-        >
-          <div className="ios-tab-icon"><Target size={20} /></div>
-          <span>5 Casos</span>
-        </button>
-
-        <button 
           className={`ios-tab-item ${activeTab === 'sparring' ? 'active' : ''}`}
           onClick={() => setActiveTab('sparring')}
         >
@@ -1489,6 +1619,14 @@ export default function App() {
         >
           <div className="ios-tab-icon"><Users size={20} /></div>
           <span>Liderança</span>
+        </button>
+
+        <button 
+          className={`ios-tab-item ${activeTab === 'softLanding' ? 'active' : ''}`}
+          onClick={() => setActiveTab('softLanding')}
+        >
+          <div className="ios-tab-icon"><RotateCcw size={20} /></div>
+          <span>Retomada</span>
         </button>
       </nav>
     </div>
