@@ -1,4 +1,13 @@
-import type { Demand, DelegationItem, MemoryFact, ChatMessage } from './types';
+import type { 
+  Demand, 
+  DelegationItem, 
+  MemoryFact, 
+  ChatMessage,
+  BrainHack,
+  EvolutionMetrics,
+  SmartNotification,
+  AntiSabotageTactic
+} from './types';
 
 export const INITIAL_DEMANDS: Demand[] = [
   {
@@ -187,3 +196,139 @@ export const INITIAL_CHAT_MESSAGES: ChatMessage[] = [
     }
   }
 ];
+
+export const INITIAL_BRAIN_HACKS: BrainHack[] = [
+  {
+    id: 'hack-1',
+    category: 'Desarmar Perfeccionismo',
+    quote: 'O perfeccionismo não é busca por excelência; é o disfarce mais sofisticado que o medo de julgamento já inventou.',
+    authorOrSource: 'Neurociência do Comportamento',
+    neuroMechanism: 'A amígdala cerebral ativa a resposta de luta ou fuga diante do risco de falha. A solução é dar a si mesmo permissão explícita para criar uma "Versão Intencionalmente Ruim" em 10 minutos.',
+    actionPrompt: 'Abra um arquivo em branco agora e escreva a pior versão possível da sua tarefa. Proíba-se de editar pelos próximos 7 minutos.'
+  },
+  {
+    id: 'hack-2',
+    category: 'Dopamina & Inércia',
+    quote: 'A adrenalina da última hora é um imposto biológico caríssimo que você paga para justificar um resultado mediano caso seja criticado.',
+    authorOrSource: 'Psicologia da Síndrome do Impostor',
+    neuroMechanism: 'Ao deixar para o último segundo, você cria um álibi perfeito para o seu ego: "Se ficou nota 7, foi porque fiz em 2 horas virando a noite". Se fizesse com antecedência, teria que encarar seu limite real.',
+    actionPrompt: 'Marque uma entrega de rascunho de 10% com um colega ou diretor para hoje às 16h. Crie o "Monstro do Pânico" controlado e antecipado.'
+  },
+  {
+    id: 'hack-3',
+    category: 'Miopia Temporal',
+    quote: 'Seu cérebro prefere um alívio de 10 minutos no Instagram a um projeto de vida realizado daqui a 1 ano. Engane a miopia temporal.',
+    authorOrSource: 'Viés de Desconto Hiperbólico (Kahneman)',
+    neuroMechanism: 'O sistema límbico não entende prazos distantes. Para ele, o futuro não existe. Para fazê-lo agir, você precisa antecipar a micro-recompensa ou micro-dor para os próximos 120 segundos.',
+    actionPrompt: 'Não prometa terminar o relatório. Apenas prometa abrir o software e digitar 2 linhas. Compromisso físico de 2 minutos apenas.'
+  },
+  {
+    id: 'hack-4',
+    category: 'Anti-Impostor',
+    quote: 'Impostores não se sentem impostores porque são incompetentes, mas porque se importam profundamente e comparam seus bastidores caóticos com o palco perfeito dos outros.',
+    authorOrSource: 'Clance & O’Toole (Clinical Research)',
+    neuroMechanism: 'A síndrome do impostor prospera no silêncio e no isolamento. A ação prática é externalizar o critério de pronto (Definition of Done) com números observáveis, não sentimentos.',
+    actionPrompt: 'Liste exatamente 3 critérios objetivos que provam que sua entrega está aceitável. Se cumpriu os 3, está pronto. Ponto final.'
+  },
+  {
+    id: 'hack-5',
+    category: 'Estoicismo Prático',
+    quote: 'Dizer "sim" por educação para demandas secundárias é a maneira mais covarde de trair os seus objetivos prioritários e queimar a sua equipe.',
+    authorOrSource: 'Princípio de Foco Executivo (Sêneca / Greg McKeown)',
+    neuroMechanism: 'A necessidade de aprovação social sequestra seu córtex pré-frontal. O custo do "sim" automático é a invasão da sua noite e o estresse crônico.',
+    actionPrompt: 'Hoje, antes de aceitar qualquer nova solicitação, responda: "Deixe-me checar meu orçamento de agenda e te retorno em 1 hora".'
+  }
+];
+
+export const INITIAL_EVOLUTION_METRICS: EvolutionMetrics = {
+  daily: {
+    bigOneCompleted: true,
+    bufferPreservedPercent: 28,
+    deepWorkMinutes: 165,
+    procrastinationRepelledCount: 3,
+    victories: [
+      'Bloqueou reunião surpresa e protegeu a prova legal',
+      'Desmembrou estudo de gestão em bloco de 25 min',
+      'Acionou o SOS 5 Minutos e reapertou a dobradiça da porta'
+    ]
+  },
+  weekly: {
+    clarityScore: 84,
+    strategicRatio: 68, // 68% do tempo em Q2 (Estratégico)
+    delegatedCount: 4,
+    diplomaticNoCount: 3,
+    energyComplianceDays: 5
+  },
+  monthly: {
+    projectsAdvanced: 3,
+    burnoutAvertedAlerts: 7,
+    teamAutonomyGrowth: 2, // 2 liderados passaram para nível superior de autonomia
+    guiltFreeResets: 1
+  }
+};
+
+export const INITIAL_NOTIFICATIONS: SmartNotification[] = [
+  {
+    id: 'notif-1',
+    title: '🛡️ Alerta de Buffer Biológico',
+    body: 'Seu buffer de segurança está em 28%. Recuse reuniões não-essenciais para proteger o encerramento do seu dia às 18:30.',
+    category: 'BUFFER_ALERT',
+    timestamp: 'Há 15 min',
+    read: false,
+    actionTab: 'today'
+  },
+  {
+    id: 'notif-2',
+    title: '🧠 Hack Anti-Sabotagem: O Desafio dos 120s',
+    body: 'Sentindo vontade de adiar o relatório? Autorização concedida para fazer uma versão horrível de 5 minutos. Apenas abra o documento.',
+    category: 'ANTI_SABOTAGE',
+    timestamp: 'Há 1 hora',
+    read: false,
+    actionTab: 'procrastination'
+  },
+  {
+    id: 'notif-3',
+    title: '🎯 The Big One Aguardando',
+    body: 'SLA 10:30 se aproximando: Alinhamento do Squad Alfa precisa da sua validação para destravar o deploy de staging.',
+    category: 'THE_BIG_ONE',
+    timestamp: 'Hoje 09:00',
+    read: true,
+    actionTab: 'today'
+  }
+];
+
+export const INITIAL_ANTI_SABOTAGE_TACTICS: AntiSabotageTactic[] = [
+  {
+    id: 'tactic-1',
+    title: 'O Protocolo da Versão Malfeita Intencional (Crappy Draft)',
+    subtitle: 'Desarmar o Perfeccionismo e a Síndrome do Impostor',
+    psychologicalRoot: 'Você não começa porque o padrão mental é tão alto que seu cérebro prefere não tentar a correr o risco de produzir algo mediano.',
+    neuroHack: 'Abaixe a régua para o chão conscientemente. Diga ao seu cérebro: "Vou gastar 7 minutos escrevendo o pior texto da história da empresa". Quando a pressão do julgamento zera, o córtex motor destrava.',
+    actionStep: 'Escreva sem apagar, sem corrigir pontuação e sem formatar. Apenas despeje o raciocínio cru.'
+  },
+  {
+    id: 'tactic-2',
+    title: 'O Hack do Pânico Antecipado (Deadlines Sociais)',
+    subtitle: 'Para Viciados na Adrenalina de Última Hora',
+    psychologicalRoot: 'Prazos internos não funcionam com você porque seu cérebro sabe que você é o juiz e vai se perdoar se adiar. Você precisa do "Monstro do Pânico" para secretar dopamina.',
+    neuroHack: 'Crie uma consequência social irreversível 3 dias antes. Mande um WhatsApp para seu gestor ou colega: "Te mando os primeiros 3 slides hoje às 16h para ver se estamos alinhados". O medo de passar vergonha pública ativará a adrenalina em escala segura.',
+    actionStep: 'Envie um microcompromisso público agora com data e hora exatas.'
+  },
+  {
+    id: 'tactic-3',
+    title: 'A Regra dos 120 Segundos (Quebra da Inércia Física)',
+    subtitle: 'Enganar a Barreira de Transição de Estado',
+    psychologicalRoot: 'A dor antecipada de trabalhar 2 horas em uma tarefa árdua ativa os centros de dor física no cérebro (córtex insular).',
+    neuroHack: 'O cérebro não resiste a tarefas de 2 minutos. Prometa a si mesmo que vai fazer APENAS o primeiro movimento físico: abrir o e-mail, colocar o tênis, pegar a chave de fenda. Se quiser parar em 120 segundos, pare.',
+    actionStep: 'Execute agora um micro-gesto que demore menos de 2 minutos. Quase sempre você continuará.'
+  },
+  {
+    id: 'tactic-4',
+    title: 'Auditoria de Conforto vs. Risco Real',
+    subtitle: 'Identificar a Procrastinação Produtiva',
+    psychologicalRoot: 'Você passa a manhã organizando pastas, limpando a mesa ou respondendo mensagens irrelevantes para se sentir produtivo enquanto foge da decisão dura.',
+    neuroHack: 'Pergunte-se: "Se eu só pudesse fazer UMA coisa hoje para não me sentir um farsante ao deitar, qual seria?". Todo o resto é refúgio de conforto.',
+    actionStep: 'Feche todas as abas secundárias e encare a tarefa desconfortável pelos próximos 20 minutos.'
+  }
+];
+

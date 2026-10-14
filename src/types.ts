@@ -88,3 +88,55 @@ export interface FullBackupData {
   coachPosture: CoachPosture;
   currentEnergy: EnergyState;
 }
+
+export interface BrainHack {
+  id: string;
+  category: 'Anti-Impostor' | 'Desarmar Perfeccionismo' | 'Dopamina & Inércia' | 'Miopia Temporal' | 'Estoicismo Prático';
+  quote: string;
+  authorOrSource: string;
+  neuroMechanism: string; // Explicação de como o cérebro é "enganado"
+  actionPrompt: string; // Micropasso físico imediato
+}
+
+export interface EvolutionMetrics {
+  daily: {
+    bigOneCompleted: boolean;
+    bufferPreservedPercent: number; // Ex: 28%
+    deepWorkMinutes: number;
+    procrastinationRepelledCount: number; // Quantas vezes venceu o impulso de adiar
+    victories: string[];
+  };
+  weekly: {
+    clarityScore: number; // 0-100
+    strategicRatio: number; // % do tempo em tarefas estratégicas Q2 vs incêndios Q1
+    delegatedCount: number;
+    diplomaticNoCount: number; // Demandas recusadas com elegância
+    energyComplianceDays: number; // Dias em que respeitou o limite biológico
+  };
+  monthly: {
+    projectsAdvanced: number;
+    burnoutAvertedAlerts: number; // Vezes que o sistema evitou colapso de agenda
+    teamAutonomyGrowth: number; // Liderados que subiram de nível de autonomia
+    guiltFreeResets: number; // Retomadas sem culpa executadas com sucesso
+  };
+}
+
+export interface SmartNotification {
+  id: string;
+  title: string;
+  body: string;
+  category: 'BUFFER_ALERT' | 'NEURO_HACK' | 'ENERGY_CHECK' | 'THE_BIG_ONE' | 'EVENING_SHUTDOWN' | 'ANTI_SABOTAGE';
+  timestamp: string;
+  read: boolean;
+  actionTab?: string;
+}
+
+export interface AntiSabotageTactic {
+  id: string;
+  title: string;
+  subtitle: string;
+  psychologicalRoot: string;
+  neuroHack: string;
+  actionStep: string;
+}
+

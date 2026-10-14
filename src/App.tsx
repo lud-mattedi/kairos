@@ -29,16 +29,39 @@ import {
   Key,
   History,
   Shield,
-  ArrowRight
+  ArrowRight,
+  Bell,
+  Award,
+  TrendingUp,
+  Quote,
+  Flame
 } from 'lucide-react';
-import type { Demand, CoachPosture, EnergyState, DelegationItem, MemoryFact, ChatMessage, LifeDomain } from './types';
+import type { 
+  Demand, 
+  CoachPosture, 
+  EnergyState, 
+  DelegationItem, 
+  MemoryFact, 
+  ChatMessage, 
+  LifeDomain,
+  BrainHack,
+  EvolutionMetrics,
+  SmartNotification,
+  AntiSabotageTactic
+} from './types';
+import { 
+  INITIAL_BRAIN_HACKS, 
+  INITIAL_EVOLUTION_METRICS, 
+  INITIAL_NOTIFICATIONS, 
+  INITIAL_ANTI_SABOTAGE_TACTICS 
+} from './mockData';
 import { storageService } from './services/storageService';
 import { aiService } from './services/aiService';
 import { calendarService } from './services/calendarService';
 import './App.css';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'today' | 'showcase' | 'inbox' | 'procrastination' | 'boundaries' | 'sparring' | 'softLanding' | 'memory'>('today');
+  const [activeTab, setActiveTab] = useState<'today' | 'showcase' | 'inbox' | 'procrastination' | 'boundaries' | 'sparring' | 'softLanding' | 'memory' | 'evolution'>('today');
   
   // Persistent State
   const [coachPosture, setCoachPosture] = useState<CoachPosture>(storageService.loadPosture);
@@ -49,6 +72,20 @@ export default function App() {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>(storageService.loadChat);
   const [apiKey, setApiKey] = useState<string>(storageService.getApiKey);
   const [isSavingKey, setIsSavingKey] = useState(false);
+
+  // New modules state: Evolution, Neuro-Hacks, Notifications, Anti-Sabotage
+  const [evolutionPeriod, setEvolutionPeriod] = useState<'daily' | 'weekly' | 'monthly'>('daily');
+  const [brainHacks] = useState<BrainHack[]>(INITIAL_BRAIN_HACKS);
+  const [currentHackIndex, setCurrentHackIndex] = useState(0);
+  const [evolutionMetrics] = useState<EvolutionMetrics>(INITIAL_EVOLUTION_METRICS);
+  const [notifications, setNotifications] = useState<SmartNotification[]>(INITIAL_NOTIFICATIONS);
+  const [showNotificationsModal, setShowNotificationsModal] = useState(false);
+  const [antiSabotageTactics] = useState<AntiSabotageTactic[]>(INITIAL_ANTI_SABOTAGE_TACTICS);
+  const [activeTacticId, setActiveTacticId] = useState<string>('tactic-1');
+
+  // Crappy Draft Timer (7 min / 420s)
+  const [crappyDraftTimer, setCrappyDraftTimer] = useState(420);
+  const [crappyDraftRunning, setCrappyDraftRunning] = useState(false);
 
   const [chatInput, setChatInput] = useState('');
   const [isAiLoading, setIsAiLoading] = useState(false);
@@ -124,6 +161,37 @@ export default function App() {
     }
     return () => clearInterval(interval);
   }, [timerActive, timerSeconds]);
+
+  // Crappy Draft Timer effect
+  useEffect(() => {
+    let interval: any = null;
+    if (crappyDraftRunning && crappyDraftTimer > 0) {
+      interval = setInterval(() => {
+        setCrappyDraftTimer(sec => sec - 1);
+      }, 1000);
+    } else if (crappyDraftTimer === 0) {
+      setCrappyDraftRunning(false);
+    }
+    return () => clearInterval(interval);
+  }, [crappyDraftRunning, crappyDraftTimer]);
+
+  const requestNotificationPermission = async () => {
+    if (!('Notification' in window)) {
+      alert('Seu navegador não suporta notificações de sistema.');
+      return;
+    }
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      new Notification('KAIROS OS • Guardião Conectado', {
+        body: 'Notificações ativadas! Você só receberá alertas de risco de buffer, The Big One e hacks de foco.',
+        icon: '/favicon.svg'
+      });
+    }
+  };
+
+  const markNotificationAsRead = (id: string) => {
+    setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n));
+  };
 
   const copyToClipboard = (text: string, key: string) => {
     navigator.clipboard.writeText(text);
@@ -324,6 +392,19 @@ export default function App() {
               <Plus size={16} /> Capturar Demanda
             </button>
 
+            {/* Notification Bell (Desktop & Mobile) */}
+            <button 
+              className="notif-btn" 
+              onClick={() => setShowNotificationsModal(true)}
+              title="Notificações Pertinentes"
+              aria-label="Notificações"
+            >
+              <Bell size={16} />
+              {notifications.filter(n => !n.read).length > 0 && (
+                <span className="notif-badge-count">{notifications.filter(n => !n.read).length}</span>
+              )}
+            </button>
+
             {/* Mobile Header Actions (Stitch iPhone Pattern) */}
             <div className="mobile-telemetry-pill">
               <span className="telemetry-pulse"></span>
@@ -360,7 +441,8 @@ export default function App() {
         <button className={`mobile-nav-chip ${activeTab === 'boundaries' ? 'active' : ''}`} onClick={() => setActiveTab('boundaries')}>5. Liderança</button>
         <button className={`mobile-nav-chip ${activeTab === 'sparring' ? 'active' : ''}`} onClick={() => setActiveTab('sparring')}>6. Coach IA</button>
         <button className={`mobile-nav-chip ${activeTab === 'softLanding' ? 'active' : ''}`} onClick={() => setActiveTab('softLanding')}>7. Retomada</button>
-        <button className={`mobile-nav-chip ${activeTab === 'memory' ? 'active' : ''}`} onClick={() => setActiveTab('memory')}>8. Memória</button>
+        <button className={`mobile-nav-chip ${activeTab === 'evolution' ? 'active' : ''}`} onClick={() => setActiveTab('evolution')}>🏆 8. Conquistas</button>
+        <button className={`mobile-nav-chip ${activeTab === 'memory' ? 'active' : ''}`} onClick={() => setActiveTab('memory')}>9. Memória</button>
       </div>
 
       {/* Main Tab Navigation */}
@@ -409,10 +491,16 @@ export default function App() {
             <RotateCcw size={15} /> 7. Retomada sem Culpa
           </button>
           <button 
+            className={`nav-tab ${activeTab === 'evolution' ? 'active' : ''}`}
+            onClick={() => setActiveTab('evolution')}
+          >
+            <Award size={15} /> 8. Evolução & Conquistas
+          </button>
+          <button 
             className={`nav-tab ${activeTab === 'memory' ? 'active' : ''}`}
             onClick={() => setActiveTab('memory')}
           >
-            <Eye size={15} /> 8. Memória & Integrações
+            <Eye size={15} /> 9. Memória & Integrações
           </button>
         </div>
       </nav>
@@ -470,6 +558,36 @@ export default function App() {
                 >
                   Iniciar Alinhamento <ArrowRight size={14} />
                 </button>
+              </div>
+            </div>
+
+            {/* Daily Neuro-Hack Card (Enganar o Cérebro) */}
+            <div className="neuro-hack-card">
+              <div className="neuro-hack-header">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                  <Quote size={16} color="var(--accent-amber-soft)" />
+                  <span className="badge badge-amber">{brainHacks[currentHackIndex].category}</span>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Neuro-Hack #{currentHackIndex + 1} de {brainHacks.length}</span>
+                </div>
+                <button 
+                  className="btn-ghost" 
+                  onClick={() => setCurrentHackIndex((currentHackIndex + 1) % brainHacks.length)}
+                  style={{ fontSize: '0.75rem', color: 'var(--accent-amber-soft)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+                >
+                  <RefreshCw size={12} /> Próximo Neuro-Hack
+                </button>
+              </div>
+              <p className="neuro-hack-quote">
+                "{brainHacks[currentHackIndex].quote}"
+              </p>
+              <div className="neuro-hack-mechanism">
+                <strong style={{ color: 'var(--accent-sage-soft)', display: 'block', marginBottom: '0.2rem' }}>
+                  🧠 Como isso engana o cérebro:
+                </strong>
+                {brainHacks[currentHackIndex].neuroMechanism}
+              </div>
+              <div className="neuro-hack-action">
+                <span style={{ color: 'var(--accent-amber-soft)', fontWeight: 600 }}>⚡ Micropasso de Ação:</span> {brainHacks[currentHackIndex].actionPrompt}
               </div>
             </div>
 
@@ -1001,6 +1119,100 @@ export default function App() {
                 </button>
               </div>
             </div>
+
+            {/* Advanced Anti-Sabotage Arsenal for Chronic Procrastinators & Adrenaline Junkies */}
+            <div style={{ marginTop: '2rem', borderTop: '1px solid var(--border-subtle)', paddingTop: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.75rem' }}>
+                <Flame size={20} color="var(--accent-amber)" />
+                <div>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 600 }}>
+                    Arsenal Anti-Sabotagem: Para Viciados em Adrenalina & Síndrome do Impostor
+                  </h3>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem' }}>
+                    Táticas clínicas e neuro-hacks desenvolvidos para desarmar a paralisia do ego, a miopia temporal e o vício no pânico de última hora.
+                  </p>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.6rem', marginBottom: '1.25rem' }}>
+                {antiSabotageTactics.map(tactic => (
+                  <button 
+                    key={tactic.id}
+                    className={`tactic-tab-btn ${activeTacticId === tactic.id ? 'active' : ''}`}
+                    onClick={() => setActiveTacticId(tactic.id)}
+                  >
+                    <span>{tactic.title}</span>
+                    <ArrowRight size={14} />
+                  </button>
+                ))}
+              </div>
+
+              {/* Active Tactic Detail Card */}
+              {(() => {
+                const cur = antiSabotageTactics.find(t => t.id === activeTacticId) || antiSabotageTactics[0];
+                return (
+                  <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', borderRadius: '6px', padding: '1.25rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.6rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                      <strong style={{ fontSize: '1rem', color: 'var(--accent-amber-soft)' }}>{cur.title}</strong>
+                      <span className="badge badge-amber">{cur.subtitle}</span>
+                    </div>
+
+                    <div style={{ marginBottom: '0.85rem' }}>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--accent-rose)', fontWeight: 700, textTransform: 'uppercase', display: 'block' }}>
+                        Causa Raiz Oculta (Por que você faz isso):
+                      </span>
+                      <p style={{ fontSize: '0.83rem', color: 'var(--text-secondary)', marginTop: '0.2rem', lineHeight: 1.55 }}>
+                        {cur.psychologicalRoot}
+                      </p>
+                    </div>
+
+                    <div style={{ background: 'rgba(212, 163, 89, 0.08)', border: '1px solid rgba(212, 163, 89, 0.25)', borderRadius: '4px', padding: '0.85rem', marginBottom: '0.85rem' }}>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--accent-amber-soft)', fontWeight: 700, textTransform: 'uppercase', display: 'block' }}>
+                        🧠 Como o Neuro-Hack engana o cérebro:
+                      </span>
+                      <p style={{ fontSize: '0.83rem', color: 'var(--text-main)', marginTop: '0.2rem', lineHeight: 1.55 }}>
+                        {cur.neuroHack}
+                      </p>
+                    </div>
+
+                    {/* Interactive Special Tool for Crappy Draft */}
+                    {cur.id === 'tactic-1' && (
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(12, 14, 18, 0.8)', padding: '0.85rem 1rem', borderRadius: '4px', border: '1px solid var(--border-subtle)', marginBottom: '0.85rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                        <div>
+                          <div style={{ fontSize: '0.72rem', color: 'var(--accent-amber-soft)', fontWeight: 700, textTransform: 'uppercase' }}>
+                            CRONÔMETRO: 7 MINUTOS PARA FAZER MALFEITO
+                          </div>
+                          <div style={{ fontSize: '1.4rem', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+                            {Math.floor(crappyDraftTimer / 60)}:{(crappyDraftTimer % 60).toString().padStart(2, '0')}
+                          </div>
+                          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Proibido editar ou apagar. Apenas produza o rascunho cru.</span>
+                        </div>
+                        <div style={{ display: 'flex', gap: '0.4rem' }}>
+                          <button 
+                            className="btn-primary" 
+                            style={{ fontSize: '0.78rem', padding: '0.4rem 0.8rem' }}
+                            onClick={() => setCrappyDraftRunning(!crappyDraftRunning)}
+                          >
+                            {crappyDraftRunning ? 'Pausar' : 'Iniciar Rascunho Podre'}
+                          </button>
+                          <button 
+                            className="btn-secondary" 
+                            style={{ fontSize: '0.78rem', padding: '0.4rem 0.6rem' }}
+                            onClick={() => { setCrappyDraftRunning(false); setCrappyDraftTimer(420); }}
+                          >
+                            <RefreshCw size={12} />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    <div style={{ fontSize: '0.84rem', color: 'var(--text-main)' }}>
+                      <strong>⚡ Ação Imediata Obrigatória:</strong> {cur.actionStep}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
           </div>
         )}
 
@@ -1291,7 +1503,152 @@ export default function App() {
           </div>
         )}
 
-        {/* ----------------- TAB 8: MEMÓRIA & INTEGRAÇÕES ----------------- */}
+        {/* ----------------- TAB 8: EVOLUÇÃO & CONQUISTAS ----------------- */}
+        {activeTab === 'evolution' && (
+          <div>
+            <div className="evolution-header">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
+                <div>
+                  <h2 style={{ fontSize: '1.3rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <Award size={20} color="var(--accent-amber-soft)" /> Dashboard de Evolução & Conquistas
+                  </h2>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                    O sucesso aqui é medido pela lucidez das suas decisões e pelo foco protegido, não pela quantidade vazia de tarefas riscadas.
+                  </p>
+                </div>
+                <div className="period-switcher">
+                  <button 
+                    className={`period-btn ${evolutionPeriod === 'daily' ? 'active' : ''}`}
+                    onClick={() => setEvolutionPeriod('daily')}
+                  >
+                    Hoje (Diário)
+                  </button>
+                  <button 
+                    className={`period-btn ${evolutionPeriod === 'weekly' ? 'active' : ''}`}
+                    onClick={() => setEvolutionPeriod('weekly')}
+                  >
+                    Esta Semana
+                  </button>
+                  <button 
+                    className={`period-btn ${evolutionPeriod === 'monthly' ? 'active' : ''}`}
+                    onClick={() => setEvolutionPeriod('monthly')}
+                  >
+                    Este Mês
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* DAILY VIEW */}
+            {evolutionPeriod === 'daily' && (
+              <div>
+                <div className="kpi-grid">
+                  <div className="kpi-card" style={{ borderTop: '2px solid var(--accent-amber)' }}>
+                    <div className="kpi-title"><Target size={14} color="var(--accent-amber-soft)" /> The Big One (Foco Nobre)</div>
+                    <div className="kpi-value" style={{ color: 'var(--accent-amber-soft)' }}>100%</div>
+                    <div className="kpi-sub">SLA 10:30 cumprido sem invasão de agenda</div>
+                  </div>
+                  <div className="kpi-card" style={{ borderTop: '2px solid var(--accent-sage)' }}>
+                    <div className="kpi-title"><Shield size={14} color="var(--accent-sage-soft)" /> Buffer Preservado</div>
+                    <div className="kpi-value" style={{ color: 'var(--accent-sage-soft)' }}>28%</div>
+                    <div className="kpi-sub">1h30m intacta para imprevistos e descanso</div>
+                  </div>
+                  <div className="kpi-card" style={{ borderTop: '2px solid var(--accent-amber)' }}>
+                    <div className="kpi-title"><Clock size={14} color="var(--accent-amber-soft)" /> Foco Nobre Sustentado</div>
+                    <div className="kpi-value">2h45m</div>
+                    <div className="kpi-sub">Dentro do teto biológico saudável (máx 3h30m)</div>
+                  </div>
+                  <div className="kpi-card" style={{ borderTop: '2px solid var(--accent-sage)' }}>
+                    <div className="kpi-title"><Flame size={14} color="var(--accent-amber-soft)" /> Sabotagens Desarmadas</div>
+                    <div className="kpi-value">3x</div>
+                    <div className="kpi-sub">Impulsos de adiamento neutralizados pelo SOS</div>
+                  </div>
+                </div>
+
+                <div className="wizard-box" style={{ marginBottom: '1.5rem' }}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--accent-amber-soft)', marginBottom: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <CheckCircle2 size={16} /> Registro de Vitórias Reais do Dia
+                  </h3>
+                  <div className="victories-list">
+                    {evolutionMetrics.daily.victories.map((v, i) => (
+                      <div key={i} className="victory-item">
+                        <span style={{ color: 'var(--accent-sage-soft)', fontWeight: 700 }}>✓</span>
+                        <span>{v}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* WEEKLY VIEW */}
+            {evolutionPeriod === 'weekly' && (
+              <div>
+                <div className="kpi-grid">
+                  <div className="kpi-card" style={{ borderTop: '2px solid var(--accent-sage)' }}>
+                    <div className="kpi-title"><BrainCircuit size={14} color="var(--accent-sage-soft)" /> Índice de Clareza Decisória</div>
+                    <div className="kpi-value" style={{ color: 'var(--accent-sage-soft)' }}>84 / 100</div>
+                    <div className="kpi-sub">+12% vs. semana anterior</div>
+                  </div>
+                  <div className="kpi-card" style={{ borderTop: '2px solid var(--accent-amber)' }}>
+                    <div className="kpi-title"><TrendingUp size={14} color="var(--accent-amber-soft)" /> Proporção Estratégica (Q2)</div>
+                    <div className="kpi-value">68%</div>
+                    <div className="kpi-sub">Tempo dedicado a metas nobres vs. apagar incêndios</div>
+                  </div>
+                  <div className="kpi-card" style={{ borderTop: '2px solid var(--accent-amber)' }}>
+                    <div className="kpi-title"><ShieldAlert size={14} color="var(--accent-amber-soft)" /> Nãos Diplomáticos Dados</div>
+                    <div className="kpi-value">3</div>
+                    <div className="kpi-sub">Demandas tóxicas ou fora de escopo barradas</div>
+                  </div>
+                  <div className="kpi-card" style={{ borderTop: '2px solid var(--accent-sage)' }}>
+                    <div className="kpi-title"><Users size={14} color="var(--accent-sage-soft)" /> Liderança com Autonomia</div>
+                    <div className="kpi-value">4</div>
+                    <div className="kpi-sub">Contratos de delegação formalizados sem microgestão</div>
+                  </div>
+                </div>
+
+                <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '6px', padding: '1.25rem', marginBottom: '1.5rem' }}>
+                  <h3 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--accent-sage-soft)', marginBottom: '0.5rem' }}>
+                    🌿 Síntese da Semana: Zero Ilusão de Capacidade Infinita
+                  </h3>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                    Em 5 dos 5 dias úteis, você respeitou o fechamento de agenda às 18:30 e não invadiu o descanso noturno. Sua equipe operou com clareza nos entregáveis e você manteve 28% de margem intocável contra imprevistos.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* MONTHLY VIEW */}
+            {evolutionPeriod === 'monthly' && (
+              <div>
+                <div className="kpi-grid">
+                  <div className="kpi-card" style={{ borderTop: '2px solid var(--accent-amber)' }}>
+                    <div className="kpi-title"><Sparkles size={14} color="var(--accent-amber-soft)" /> Projetos de Vida Destravados</div>
+                    <div className="kpi-value">3</div>
+                    <div className="kpi-sub">Mural da Vida, Processo do Squad, Exame Detran</div>
+                  </div>
+                  <div className="kpi-card" style={{ borderTop: '2px solid var(--accent-sage)' }}>
+                    <div className="kpi-title"><ShieldCheck size={14} color="var(--accent-sage-soft)" /> Colapsos de Burnout Evitados</div>
+                    <div className="kpi-value" style={{ color: 'var(--accent-sage-soft)' }}>7x</div>
+                    <div className="kpi-sub">Alertas do Guardião KAIROS que protegeram sua sanidade</div>
+                  </div>
+                  <div className="kpi-card" style={{ borderTop: '2px solid var(--accent-amber)' }}>
+                    <div className="kpi-title"><Users size={14} color="var(--accent-amber-soft)" /> Crescimento da Equipe</div>
+                    <div className="kpi-value">+2 Níveis</div>
+                    <div className="kpi-sub">Liderados promovidos a autonomia de decisão</div>
+                  </div>
+                  <div className="kpi-card" style={{ borderTop: '2px solid var(--accent-sage)' }}>
+                    <div className="kpi-title"><RotateCcw size={14} color="var(--accent-sage-soft)" /> Retomadas sem Culpa</div>
+                    <div className="kpi-value">1</div>
+                    <div className="kpi-sub">Zero acúmulo punitivo após períodos de folga</div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ----------------- TAB 9: MEMÓRIA & INTEGRAÇÕES ----------------- */}
         {activeTab === 'memory' && (
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
@@ -1376,6 +1733,70 @@ export default function App() {
         )}
 
       </main>
+
+      {/* ----------------- MODAL: NOTIFICAÇÕES INTELIGENTES ----------------- */}
+      {showNotificationsModal && (
+        <div className="modal-backdrop" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem' }}>
+          <div className="wizard-box modal-sheet" style={{ width: '100%', maxWidth: '540px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Bell size={18} color="var(--accent-amber-soft)" />
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 600 }}>Notificações & Empurrões Comportamentais</h3>
+              </div>
+              <button className="btn-ghost" onClick={() => setShowNotificationsModal(false)}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1rem', lineHeight: 1.5 }}>
+              O KAIROS só envia alertas quando há risco biológico real de sobrecarga, deadline iminente ou oportunidade de desarmar a procrastinação.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
+              {notifications.map(n => (
+                <div key={n.id} className={`notif-item ${!n.read ? 'unread' : ''}`} onClick={() => markNotificationAsRead(n.id)}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <strong style={{ fontSize: '0.86rem', color: 'var(--text-main)' }}>{n.title}</strong>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{n.timestamp}</span>
+                  </div>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                    {n.body}
+                  </p>
+                  {n.actionTab && (
+                    <button 
+                      className="btn-ghost" 
+                      style={{ alignSelf: 'flex-start', fontSize: '0.75rem', color: 'var(--accent-amber-soft)', padding: 0, marginTop: '0.2rem' }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowNotificationsModal(false);
+                        setActiveTab(n.actionTab as any);
+                      }}
+                    >
+                      Acessar no App →
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', borderRadius: '6px', padding: '0.85rem', marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <div>
+                <strong style={{ fontSize: '0.82rem', display: 'block', color: 'var(--text-main)' }}>Notificações no iOS / Safari</strong>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Receba empurrões mesmo com o navegador fechado</span>
+              </div>
+              <button className="btn-primary" style={{ fontSize: '0.75rem', padding: '0.35rem 0.75rem' }} onClick={requestNotificationPermission}>
+                Ativar Alertas Nativos
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <button className="btn-secondary" onClick={() => setShowNotificationsModal(false)}>
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ----------------- MODAL: HISTÓRICO DE VERSÕES ----------------- */}
       {showVersionModal && (

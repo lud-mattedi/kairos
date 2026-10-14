@@ -8,6 +8,8 @@ const STORAGE_KEYS = {
   CHAT: 'kairos_chat_v1',
   ENERGY: 'kairos_energy_v1',
   POSTURE: 'kairos_posture_v1',
+  NOTIFICATIONS: 'kairos_notifications_v1',
+  METRICS: 'kairos_metrics_v1',
   GEMINI_API_KEY: 'kairos_gemini_api_key'
 };
 
