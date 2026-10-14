@@ -1,25 +1,32 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap');
 
 :root {
-  --bg-primary: #090d16;
-  --bg-secondary: #0f172a;
-  --bg-card: #141e33;
-  --bg-card-hover: #1a2742;
-  --border-subtle: #1e293b;
-  --border-focus: #38bdf8;
+  /* Executive Sanctuary Colors (Matching Google Stitch) */
+  --bg-primary: #0C0E12;          /* Slate Deep */
+  --bg-secondary: #101418;        /* Slate Canvas */
+  --bg-card: #181C23;             /* Slate Card */
+  --bg-card-hover: #222730;       /* Slate Elevated */
+  --border-subtle: #2E3542;       /* Slate Border Hairline */
+  --border-focus: #D4A359;        /* Burnished Amber Focus */
   
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --text-dim: #64748b;
+  --text-main: #F7F6F2;           /* Warm Ivory Text */
+  --text-secondary: #A8B0BC;      /* Slate Mist */
+  --text-muted: #646E7E;          /* Muted Telemetry */
+  --text-dim: #4F5868;            
   
-  --accent-blue: #38bdf8;
-  --accent-indigo: #6366f1;
-  --accent-emerald: #10b981;
-  --accent-amber: #f59e0b;
-  --accent-rose: #f43f5e;
-  --accent-violet: #8b5cf6;
+  --accent-amber: #D4A359;        /* Primary Burnished Amber */
+  --accent-amber-soft: #E5BE7E;   /* Champagne Gold */
+  --accent-amber-dim: #47351A;    /* Amber Pill Fill */
   
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --accent-sage: #768E7A;         /* Nordic Sage (Buffer & Equilibrium) */
+  --accent-sage-soft: #9AB09E;    /* Sage Highlight */
+  --accent-sage-dim: #1E2920;     /* Sage Pill Fill */
+  
+  --accent-mist: #8A9BA8;         /* Nordic Mist (Tertiary) */
+  --accent-rose: #E06C75;         /* Soft Crimson for Warnings */
+  
+  --font-serif: 'Newsreader', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
@@ -34,102 +41,122 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-main);
   min-height: 100vh;
-  line-height: 1.5;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, .font-editorial {
+  font-family: var(--font-serif);
+  letter-spacing: -0.015em;
 }
 
 button {
-  font-family: inherit;
+  font-family: var(--font-sans);
   cursor: pointer;
   border: none;
   background: none;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 input, textarea, select {
-  font-family: inherit;
+  font-family: var(--font-sans);
   color: inherit;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: var(--bg-primary);
 }
 ::-webkit-scrollbar-thumb {
   background: var(--border-subtle);
-  border-radius: 9999px;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-dim);
+  background: var(--text-muted);
 }
 
-/* Utilities */
+/* Container */
 .container {
-  max-width: 1280px;
+  max-width: 1360px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
+/* Badges & Chips */
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: 9999px;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
 
-.badge-blue { background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
-.badge-emerald { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-.badge-amber { background: rgba(245, 158, 11, 0.12); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-.badge-rose { background: rgba(244, 63, 94, 0.12); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
-.badge-violet { background: rgba(139, 92, 246, 0.12); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); }
-.badge-gray { background: rgba(148, 163, 184, 0.1); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.2); }
+.badge-amber {
+  background: var(--accent-amber-dim);
+  color: var(--accent-amber-soft);
+  border: 1px solid rgba(212, 163, 89, 0.35);
+}
 
-.card {
-  background: var(--bg-card);
+.badge-sage {
+  background: var(--accent-sage-dim);
+  color: var(--accent-sage-soft);
+  border: 1px solid rgba(118, 142, 122, 0.35);
+}
+
+.badge-mist {
+  background: rgba(138, 155, 168, 0.12);
+  color: var(--accent-mist);
+  border: 1px solid rgba(138, 155, 168, 0.25);
+}
+
+.badge-gray {
+  background: rgba(100, 110, 126, 0.12);
+  color: var(--text-secondary);
   border: 1px solid var(--border-subtle);
-  border-radius: 1rem;
-  padding: 1.25rem;
-  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
-.card:hover {
-  border-color: rgba(56, 189, 248, 0.35);
+.badge-rose {
+  background: rgba(224, 108, 117, 0.12);
+  color: var(--accent-rose);
+  border: 1px solid rgba(224, 108, 117, 0.3);
 }
 
+/* Executive Buttons */
 .btn-primary {
-  background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
-  color: white;
+  background: var(--accent-amber);
+  color: #0C0E12;
   padding: 0.6rem 1.25rem;
-  border-radius: 0.75rem;
+  border-radius: 4px;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 14px rgba(212, 163, 89, 0.25);
+  letter-spacing: 0.01em;
 }
 
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+  filter: brightness(1.08);
+  box-shadow: 0 6px 20px rgba(212, 163, 89, 0.35);
 }
 
 .btn-secondary {
-  background: var(--bg-secondary);
+  background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   color: var(--text-main);
   padding: 0.55rem 1.1rem;
-  border-radius: 0.75rem;
+  border-radius: 4px;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -137,20 +164,21 @@ input, textarea, select {
 
 .btn-secondary:hover {
   background: var(--bg-card-hover);
-  border-color: var(--text-dim);
+  border-color: var(--accent-amber);
+  color: var(--accent-amber-soft);
 }
 
 .btn-ghost {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   padding: 0.45rem 0.85rem;
-  border-radius: 0.5rem;
-  font-size: 0.85rem;
+  border-radius: 4px;
+  font-size: 0.82rem;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
 }
 
 .btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.05);
   color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
 }
