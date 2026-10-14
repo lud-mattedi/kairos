@@ -5,7 +5,6 @@
   background-color: var(--bg-primary);
 }
 
-/* Header */
 .app-header {
   border-bottom: 1px solid var(--border-subtle);
   background: rgba(12, 14, 18, 0.92);
@@ -13,7 +12,8 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  padding: 0.85rem 0;
+  padding-top: max(0.85rem, env(safe-area-inset-top));
+  padding-bottom: 0.85rem;
 }
 
 .header-inner {
@@ -527,4 +527,63 @@
 
 .recording-pulse {
   animation: voicePulse 1.5s infinite;
+}
+
+/* iOS Bottom Tab Bar (Apple Human Interface Guidelines) */
+.ios-tab-bar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .nav-bar {
+    display: none; /* Hide top scrollable tabs on iPhone */
+  }
+
+  .main-view {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+  }
+
+  .ios-tab-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    background: rgba(12, 14, 18, 0.88);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 0.5rem;
+    padding-bottom: max(0.6rem, env(safe-area-inset-bottom));
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .ios-tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    color: var(--text-muted);
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    background: none;
+    border: none;
+    transition: color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .ios-tab-item.active {
+    color: var(--accent-amber-soft);
+  }
+
+  .ios-tab-icon {
+    width: 1.35rem;
+    height: 1.35rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

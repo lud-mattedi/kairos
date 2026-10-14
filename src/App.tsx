@@ -1448,6 +1448,49 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* ----------------- iOS NATIVE BOTTOM TAB BAR ----------------- */}
+      <nav className="ios-tab-bar" aria-label="Navegação iOS">
+        <button 
+          className={`ios-tab-item ${activeTab === 'today' ? 'active' : ''}`}
+          onClick={() => setActiveTab('today')}
+        >
+          <div className="ios-tab-icon"><Calendar size={20} /></div>
+          <span>Cockpit</span>
+        </button>
+
+        <button 
+          className={`ios-tab-item ${activeTab === 'inbox' ? 'active' : ''}`}
+          onClick={() => setActiveTab('inbox')}
+        >
+          <div className="ios-tab-icon"><Inbox size={20} /></div>
+          <span>Triagem ({demands.length})</span>
+        </button>
+
+        <button 
+          className={`ios-tab-item ${activeTab === 'showcase' ? 'active' : ''}`}
+          onClick={() => setActiveTab('showcase')}
+        >
+          <div className="ios-tab-icon"><Target size={20} /></div>
+          <span>5 Casos</span>
+        </button>
+
+        <button 
+          className={`ios-tab-item ${activeTab === 'sparring' ? 'active' : ''}`}
+          onClick={() => setActiveTab('sparring')}
+        >
+          <div className="ios-tab-icon"><MessageSquare size={20} /></div>
+          <span>Coach IA</span>
+        </button>
+
+        <button 
+          className={`ios-tab-item ${activeTab === 'boundaries' ? 'active' : ''}`}
+          onClick={() => setActiveTab('boundaries')}
+        >
+          <div className="ios-tab-icon"><Users size={20} /></div>
+          <span>Liderança</span>
+        </button>
+      </nav>
     </div>
   );
 }

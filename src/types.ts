@@ -22,6 +22,7 @@ export interface Demand {
   nextAction: string;
   energyLevel: EnergyLevel;
   estimatedMinutes: number;
+  actualMinutes?: number;
   deadlineType: DeadlineType;
   deadlineText?: string;
   costOfDelay: string;
@@ -72,8 +73,18 @@ export interface ChatMessage {
 
 export interface DailyRitualState {
   stage: 'morning' | 'midday' | 'evening_shutdown';
-  energyScore: number; // 1 to 5
+  energyScore: number; // 1 to 10
   topFocusId: string;
   shutdownNote?: string;
   completedAt?: string;
+}
+
+export interface FullBackupData {
+  version: string;
+  exportedAt: string;
+  demands: Demand[];
+  delegations: DelegationItem[];
+  memoryFacts: MemoryFact[];
+  coachPosture: CoachPosture;
+  currentEnergy: EnergyState;
 }
