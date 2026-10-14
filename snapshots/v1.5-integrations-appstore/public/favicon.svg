@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- Background Gradient: Deep Slate to Obsidian with subtle warmth -->
+    <radialGradient id="bgGlow" cx="50%" cy="35%" r="75%">
+      <stop offset="0%" stop-color="#1e242d"/>
+      <stop offset="50%" stop-color="#12161b"/>
+      <stop offset="100%" stop-color="#080a0d"/>
+    </radialGradient>
+
+    <!-- Subtle Vignette / Outer Rim -->
+    <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255, 255, 255, 0.15)"/>
+      <stop offset="50%" stop-color="rgba(212, 163, 89, 0.1)"/>
+      <stop offset="100%" stop-color="rgba(0, 0, 0, 0.6)"/>
+    </linearGradient>
+
+    <!-- Gold Foil / Champagne Gradient for the Kairos Monogram -->
+    <linearGradient id="goldLuxury" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#fae2af"/>
+      <stop offset="35%" stop-color="#d4a359"/>
+      <stop offset="70%" stop-color="#b6833d"/>
+      <stop offset="100%" stop-color="#8a5e20"/>
+    </linearGradient>
+
+    <!-- Secondary Sage / Buffer Accent (Cognitive Serenity) -->
+    <linearGradient id="sageAura" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7ea78e"/>
+      <stop offset="100%" stop-color="#476f57"/>
+    </linearGradient>
+
+    <!-- Radial Glow behind emblem -->
+    <radialGradient id="centerAura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(212, 163, 89, 0.18)"/>
+      <stop offset="60%" stop-color="rgba(93, 138, 112, 0.08)"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+
+    <!-- Drop Shadow for Dimensionality -->
+    <filter id="execShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000000" flood-opacity="0.65"/>
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="rgba(212, 163, 89, 0.25)"/>
+    </filter>
+  </defs>
+
+  <!-- iOS App Icon Canvas (Square 1024x1024 - iOS applies squircle mask automatically) -->
+  <rect width="1024" height="1024" fill="url(#bgGlow)"/>
+
+  <!-- Dial Marks / Geometric Orbit of Focus (Subtle luxury dial) -->
+  <circle cx="512" cy="500" r="420" fill="url(#centerAura)"/>
+  <circle cx="512" cy="512" r="390" fill="none" stroke="rgba(255, 255, 255, 0.04)" stroke-width="2"/>
+  <circle cx="512" cy="512" r="340" fill="none" stroke="rgba(212, 163, 89, 0.12)" stroke-dasharray="4 16" stroke-width="2.5"/>
+  <circle cx="512" cy="512" r="280" fill="none" stroke="rgba(255, 255, 255, 0.03)" stroke-width="1.5"/>
+
+  <!-- Buffer / Cognitive Reserve Arc (Top Right 28% Sanctuary Zone) -->
+  <path d="M 512,172 A 340,340 0 0,1 818,360" fill="none" stroke="url(#sageAura)" stroke-width="7" stroke-linecap="round" opacity="0.85"/>
+  <circle cx="818" cy="360" r="6" fill="#7ea78e"/>
+  <circle cx="818" cy="360" r="14" fill="none" stroke="#7ea78e" stroke-width="1.5" opacity="0.4"/>
+
+  <!-- Main Monogram & Symbolism: "K" (Kairos) fused with Hourglass / Lucid Focus Diamond -->
+  <g filter="url(#execShadow)">
+    <!-- Vertical Pillar: Sovereign Executive Spine / Self-Mastery -->
+    <path d="M 340,240 
+             C 340,224 352,216 368,216 
+             L 396,216 
+             C 412,216 424,228 424,244 
+             L 424,780 
+             C 424,796 412,808 396,808 
+             L 368,808 
+             C 352,808 340,796 340,780 
+             Z" 
+          fill="url(#goldLuxury)"/>
+
+    <!-- Left Serifs / Editorial Detailing on Vertical Stem -->
+    <path d="M 324,236 L 440,236 C 440,236 430,268 416,276 L 348,276 C 334,268 324,236 324,236 Z" fill="url(#goldLuxury)" opacity="0.9"/>
+    <path d="M 324,788 L 440,788 C 440,788 430,756 416,748 L 348,748 C 334,756 324,788 324,788 Z" fill="url(#goldLuxury)" opacity="0.9"/>
+
+    <!-- Upper Diagonal: Ascending Strategic Vision (Golden Vector) -->
+    <path d="M 400,530 
+             L 600,282 
+             C 612,268 630,260 648,260 
+             L 688,260 
+             C 706,260 714,276 704,290 
+             L 490,560 
+             Z" 
+          fill="url(#goldLuxury)"/>
+
+    <!-- Upper Terminal Serif -->
+    <path d="M 628,260 L 720,260 C 720,260 706,290 670,305 L 610,305 Z" fill="url(#goldLuxury)" opacity="0.85"/>
+
+    <!-- Lower Diagonal: Rooted Grounding & Execution -->
+    <path d="M 454,510 
+             L 662,752 
+             C 674,766 686,774 706,774 
+             L 738,774 
+             C 756,774 764,792 750,804 
+             C 740,812 724,812 710,812 
+             L 628,812 
+             C 608,812 590,802 578,788 
+             L 396,576 
+             Z" 
+          fill="url(#goldLuxury)"/>
+
+    <!-- Central Diamond: The "Opportune Moment" (Kairos Center Point / Clarity Spark) -->
+    <polygon points="512,476 538,512 512,548 486,512" fill="#fae2af" opacity="0.95"/>
+    <circle cx="512" cy="512" r="3" fill="#ffffff"/>
+  </g>
+
+  <!-- Inner Chamfer / Micro-Border of the Icon Glass Surface -->
+  <rect x="2" y="2" width="1020" height="1020" rx="0" fill="none" stroke="url(#rimGrad)" stroke-width="4" opacity="0.7"/>
+</svg>

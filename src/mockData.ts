@@ -6,7 +6,8 @@ import type {
   BrainHack,
   EvolutionMetrics,
   SmartNotification,
-  AntiSabotageTactic
+  AntiSabotageTactic,
+  IntegrationConfig
 } from './types';
 
 export const INITIAL_DEMANDS: Demand[] = [
@@ -331,4 +332,36 @@ export const INITIAL_ANTI_SABOTAGE_TACTICS: AntiSabotageTactic[] = [
     actionStep: 'Feche todas as abas secundárias e encare a tarefa desconfortável pelos próximos 20 minutos.'
   }
 ];
+
+export const INITIAL_INTEGRATIONS: IntegrationConfig = {
+  whatsapp: {
+    enabled: true,
+    phoneNumber: '+55 11 97555-6111',
+    status: 'conectado',
+    morningBriefingTime: '07:30',
+    eveningShutdownTime: '18:30',
+    audioTranscriptionEnabled: true,
+  },
+  hostinger: {
+    enabled: true,
+    email: 'lud@mktcx.com.br',
+    imapServer: 'imap.hostinger.com:993 (SSL)',
+    smtpServer: 'smtp.hostinger.com:465 (SSL)',
+    status: 'conectado',
+    filterTag: '#kairos',
+  },
+  gmail: {
+    enabled: true,
+    accountEmail: 'lud@mktcx.com.br / Workspace',
+    syncCalendar: true,
+    blockDeepWorkSlots: true,
+    status: 'conectado',
+  },
+  outlook: {
+    enabled: false,
+    accountEmail: 'lud@outlook.com',
+    syncCalendar: false,
+    status: 'desconectado',
+  },
+};
 

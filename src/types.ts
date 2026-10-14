@@ -140,3 +140,36 @@ export interface AntiSabotageTactic {
   actionStep: string;
 }
 
+export interface IntegrationConfig {
+  whatsapp: {
+    enabled: boolean;
+    phoneNumber: string;
+    status: 'conectado' | 'pendente_qr' | 'desconectado';
+    morningBriefingTime: string;
+    eveningShutdownTime: string;
+    audioTranscriptionEnabled: boolean;
+  };
+  hostinger: {
+    enabled: boolean;
+    email: string;
+    imapServer: string;
+    smtpServer: string;
+    status: 'conectado' | 'aguardando_senha' | 'desconectado';
+    filterTag: string;
+  };
+  gmail: {
+    enabled: boolean;
+    accountEmail: string;
+    syncCalendar: boolean;
+    blockDeepWorkSlots: boolean;
+    status: 'conectado' | 'desconectado';
+  };
+  outlook: {
+    enabled: boolean;
+    accountEmail: string;
+    syncCalendar: boolean;
+    status: 'conectado' | 'desconectado';
+  };
+}
+
+

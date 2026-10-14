@@ -1,5 +1,5 @@
-import type { Demand, DelegationItem, MemoryFact, ChatMessage, EnergyState, CoachPosture } from '../types';
-import { INITIAL_DEMANDS, INITIAL_DELEGATIONS, INITIAL_MEMORY, INITIAL_CHAT_MESSAGES } from '../mockData';
+import type { Demand, DelegationItem, MemoryFact, ChatMessage, EnergyState, CoachPosture, IntegrationConfig } from '../types';
+import { INITIAL_DEMANDS, INITIAL_DELEGATIONS, INITIAL_MEMORY, INITIAL_CHAT_MESSAGES, INITIAL_INTEGRATIONS } from '../mockData';
 
 const STORAGE_KEYS = {
   DEMANDS: 'kairos_demands_v1',
@@ -10,7 +10,8 @@ const STORAGE_KEYS = {
   POSTURE: 'kairos_posture_v1',
   NOTIFICATIONS: 'kairos_notifications_v1',
   METRICS: 'kairos_metrics_v1',
-  GEMINI_API_KEY: 'kairos_gemini_api_key'
+  GEMINI_API_KEY: 'kairos_gemini_api_key',
+  INTEGRATIONS: 'kairos_integrations_v1'
 };
 
 export const storageService = {
@@ -124,6 +125,23 @@ export const storageService = {
     localStorage.setItem(STORAGE_KEYS.GEMINI_API_KEY, key.trim());
   },
 
+  loadIntegrations(): IntegrationConfig {
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.INTEGRATIONS);
+      return data ? JSON.parse(data) : INITIAL_INTEGRATIONS;
+    } catch {
+      return INITIAL_INTEGRATIONS;
+    }
+  },
+
+  saveIntegrations(integrations: IntegrationConfig): void {
+    try {
+      localStorage.setItem(STORAGE_KEYS.INTEGRATIONS, JSON.stringify(integrations));
+    } catch (e) {
+      console.error('Error saving integrations:', e);
+    }
+  },
+
   resetAll(): void {
     localStorage.removeItem(STORAGE_KEYS.DEMANDS);
     localStorage.removeItem(STORAGE_KEYS.DELEGATIONS);
@@ -131,5 +149,6 @@ export const storageService = {
     localStorage.removeItem(STORAGE_KEYS.CHAT);
     localStorage.removeItem(STORAGE_KEYS.ENERGY);
     localStorage.removeItem(STORAGE_KEYS.POSTURE);
+    localStorage.removeItem(STORAGE_KEYS.INTEGRATIONS);
   }
 };

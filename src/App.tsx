@@ -34,7 +34,12 @@ import {
   Award,
   TrendingUp,
   Quote,
-  Flame
+  Flame,
+  Mail,
+  Smartphone,
+  Apple,
+  Share2,
+  Globe
 } from 'lucide-react';
 import type { 
   Demand, 
@@ -47,13 +52,14 @@ import type {
   BrainHack,
   EvolutionMetrics,
   SmartNotification,
-  AntiSabotageTactic
+  AntiSabotageTactic,
+  IntegrationConfig
 } from './types';
 import { 
   INITIAL_BRAIN_HACKS, 
   INITIAL_EVOLUTION_METRICS, 
   INITIAL_NOTIFICATIONS, 
-  INITIAL_ANTI_SABOTAGE_TACTICS 
+  INITIAL_ANTI_SABOTAGE_TACTICS
 } from './mockData';
 import { storageService } from './services/storageService';
 import { aiService } from './services/aiService';
@@ -124,7 +130,16 @@ export default function App() {
   // Version history banner modal
   const [showVersionModal, setShowVersionModal] = useState(false);
 
+  // Integrations state & modals
+  const [integrations, setIntegrations] = useState<IntegrationConfig>(storageService.loadIntegrations);
+  const [showSimulateWhatsAppToast, setShowSimulateWhatsAppToast] = useState(false);
+  const [showSimulateHostingerToast, setShowSimulateHostingerToast] = useState(false);
+  const [showAppStoreModal, setShowAppStoreModal] = useState(false);
+
   // Auto-save to LocalStorage
+  useEffect(() => {
+    storageService.saveIntegrations(integrations);
+  }, [integrations]);
   useEffect(() => {
     storageService.saveDemands(demands);
   }, [demands]);
@@ -204,6 +219,92 @@ export default function App() {
     storageService.setApiKey(apiKey);
     setIsSavingKey(true);
     setTimeout(() => setIsSavingKey(false), 1500);
+  };
+
+  const updateIntegration = <K extends keyof IntegrationConfig>(key: K, updates: Partial<IntegrationConfig[K]>) => {
+    const updated: IntegrationConfig = {
+      ...integrations,
+      [key]: {
+        ...integrations[key],
+        ...updates
+      }
+    };
+    setIntegrations(updated);
+    storageService.saveIntegrations(updated);
+  };
+
+  const handleSimulateWhatsAppAudio = () => {
+    const newDem: Demand = {
+      id: `dem-${Date.now()}`,
+      title: '🎙️ Áudio WhatsApp (+55 11 97555-6111): Alinhar dilação de prazo com diretor',
+      category: 'TASK',
+      domain: 'Trabalho',
+      nextAction: 'Enviar mensagem de 2 linhas pelo WhatsApp solicitando extensão de entrega até quinta às 12h.',
+      energyLevel: 'Média (Coordenação)',
+      estimatedMinutes: 5,
+      deadlineType: 'Hard (Externo/Crítico)',
+      deadlineText: 'Hoje 17:00 (Transcrição de voz automatizada via Whisper)',
+      costOfDelay: 'Diretor cobrar publicamente no comitê de amanhã cedo.',
+      definitionOfDone: 'Confirmação de recebimento e aceite da prorrogação pelo diretor no WhatsApp.',
+      aiDiagnosis: 'Demanda capturada por mensagem de voz às ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + '. A IA já reduziu o perfeccionismo e transformou em um micro-texto de 2 linhas.',
+      postponementCount: 0,
+      status: 'HOJE',
+      eisenhowerQuadrant: 'Q1 (Urgente & Importante)',
+      scheduledTime: '16:30 - 16:35'
+    };
+    const updated = [newDem, ...demands];
+    setDemands(updated);
+    storageService.saveDemands(updated);
+
+    const newNotif: SmartNotification = {
+      id: `notif-${Date.now()}`,
+      title: '🎙️ WhatsApp: Novo Áudio Transcrito e Triado',
+      body: 'Áudio de 42s recebido de +55 11 97555-6111 foi convertido em Próxima Ação de 5 minutos.',
+      category: 'THE_BIG_ONE',
+      timestamp: 'Agora',
+      read: false,
+      actionTab: 'today'
+    };
+    setNotifications([newNotif, ...notifications]);
+    setShowSimulateWhatsAppToast(true);
+    setTimeout(() => setShowSimulateWhatsAppToast(false), 4500);
+  };
+
+  const handleSimulateHostingerEmail = () => {
+    const newDem: Demand = {
+      id: `dem-${Date.now()}`,
+      title: '✉️ Hostinger (lud@mktcx.com.br): Relatório de Performance Trimestral #kairos',
+      category: 'PROJECT',
+      domain: 'Trabalho',
+      nextAction: 'Exportar os 3 gráficos do Looker Studio e redigir introdução de 1 parágrafo no e-mail.',
+      energyLevel: 'Alta (Foco Analítico)',
+      estimatedMinutes: 45,
+      deadlineType: 'Hard (Externo/Crítico)',
+      deadlineText: 'Amanhã 11:00',
+      costOfDelay: 'Insegurança do cliente e risco de reunião não alinhada.',
+      definitionOfDone: 'PDF de 3 páginas enviado para o cliente por e-mail.',
+      aiDiagnosis: 'E-mail capturado via filtro IMAP #kairos do Hostinger (lud@mktcx.com.br). O remetente usou termos alarmistas, mas a IA desarmou a falsa urgência e alocou no bloco nobre de amanhã.',
+      postponementCount: 0,
+      status: 'HOJE',
+      eisenhowerQuadrant: 'Q2 (Estratégico / Não Urgente)',
+      scheduledTime: '09:00 - 09:45'
+    };
+    const updated = [newDem, ...demands];
+    setDemands(updated);
+    storageService.saveDemands(updated);
+
+    const newNotif: SmartNotification = {
+      id: `notif-${Date.now()}`,
+      title: '✉️ Hostinger: E-mail Triado sem Pânico',
+      body: 'E-mail de cliente recebido em lud@mktcx.com.br desarmado pela IA e alocado no bloco nobre.',
+      category: 'BUFFER_ALERT',
+      timestamp: 'Agora',
+      read: false,
+      actionTab: 'today'
+    };
+    setNotifications([newNotif, ...notifications]);
+    setShowSimulateHostingerToast(true);
+    setTimeout(() => setShowSimulateHostingerToast(false), 4500);
   };
 
   const handleCreateDemand = async (e: React.FormEvent) => {
@@ -1654,16 +1755,243 @@ export default function App() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
               <div>
                 <h2 style={{ fontSize: '1.3rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Eye size={20} color="var(--accent-amber-soft)" /> Memória Transparente & Conexões
+                  <Eye size={20} color="var(--accent-amber-soft)" /> Canais, Integrações & Memória
                 </h2>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-                  Controle total sobre o que o sistema aprende e infere sobre você, e configuração da chave da API do Google Gemini.
+                  Conecte seu WhatsApp (+55 11 97555-6111), e-mail Hostinger (lud@mktcx.com.br), Google Workspace e publique na Apple App Store.
                 </p>
+              </div>
+              <button 
+                className="btn-primary" 
+                onClick={() => setShowAppStoreModal(true)}
+                style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.55rem 1rem' }}
+              >
+                <Apple size={16} /> Como Publicar na Apple App Store
+              </button>
+            </div>
+
+            {/* SEÇÃO 1: HUB DE INTEGRAÇÕES EXECUTIVAS */}
+            <div style={{ marginBottom: '2.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                <Share2 size={18} color="var(--accent-amber-soft)" />
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 600 }}>Canais de Captura & Assistência Contínua</h3>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
+                
+                {/* CARD WHATSAPP */}
+                <div className="wizard-box" style={{ background: 'var(--bg-card)', border: '1px solid rgba(37, 211, 102, 0.25)', position: 'relative' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                      <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'rgba(37, 211, 102, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Smartphone size={20} color="#25D366" />
+                      </div>
+                      <div>
+                        <strong style={{ fontSize: '0.95rem', display: 'block', color: 'var(--text-main)' }}>WhatsApp Executive Assistant</strong>
+                        <span style={{ fontSize: '0.75rem', color: '#25D366', fontWeight: 600 }}>{integrations.whatsapp.phoneNumber}</span>
+                      </div>
+                    </div>
+                    <span className="badge badge-sage" style={{ background: 'rgba(37, 211, 102, 0.15)', color: '#25D366', borderColor: 'rgba(37, 211, 102, 0.3)' }}>
+                      ● Conectado
+                    </span>
+                  </div>
+
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '0.85rem' }}>
+                    Envie áudios gravados na rua ou mensagens rápidas. A IA transcreve em tempo real e extrai a Próxima Ação Física sem ruído cognitivo.
+                  </p>
+
+                  <div style={{ background: 'var(--bg-secondary)', padding: '0.75rem', borderRadius: '4px', fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>🎙️ Transcrição Whisper AI:</span>
+                      <strong style={{ color: 'var(--accent-sage-soft)' }}>Ativa (Voz → GTD)</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>🌅 Briefing Matinal:</span>
+                      <strong style={{ color: 'var(--text-main)' }}>{integrations.whatsapp.morningBriefingTime} (Top 3 Prioridades)</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>🌙 Shutdown Noturno:</span>
+                      <strong style={{ color: 'var(--text-main)' }}>{integrations.whatsapp.eveningShutdownTime} (Blindagem de Sono)</strong>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <button 
+                      className="btn-primary" 
+                      style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem', background: '#25D366', color: '#000', fontWeight: 600 }}
+                      onClick={handleSimulateWhatsAppAudio}
+                    >
+                      🎙️ Simular Áudio Recebido
+                    </button>
+                    <button 
+                      className="btn-ghost" 
+                      style={{ fontSize: '0.75rem', padding: '0.4rem 0.6rem' }}
+                      onClick={() => updateIntegration('whatsapp', { enabled: !integrations.whatsapp.enabled })}
+                    >
+                      {integrations.whatsapp.enabled ? 'Pausar Notificações' : 'Reativar'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* CARD HOSTINGER */}
+                <div className="wizard-box" style={{ background: 'var(--bg-card)', border: '1px solid rgba(212, 163, 89, 0.3)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                      <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'rgba(212, 163, 89, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Mail size={20} color="var(--accent-amber-soft)" />
+                      </div>
+                      <div>
+                        <strong style={{ fontSize: '0.95rem', display: 'block', color: 'var(--text-main)' }}>Hostinger Webmail</strong>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--accent-amber-soft)', fontWeight: 600 }}>{integrations.hostinger.email}</span>
+                      </div>
+                    </div>
+                    <span className="badge badge-amber">
+                      ● IMAP Ativo
+                    </span>
+                  </div>
+
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '0.85rem' }}>
+                    Monitora sua caixa postal oficial Hostinger. E-mails com tag <code style={{ color: 'var(--accent-amber-soft)' }}>#kairos</code> ou de remetentes VIP são destrinchados sem o pânico da falsa urgência.
+                  </p>
+
+                  <div style={{ background: 'var(--bg-secondary)', padding: '0.75rem', borderRadius: '4px', fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>🌐 Servidor IMAP:</span>
+                      <strong style={{ color: 'var(--text-main)', fontFamily: 'var(--font-mono)' }}>imap.hostinger.com:993</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>📤 Servidor SMTP:</span>
+                      <strong style={{ color: 'var(--text-main)', fontFamily: 'var(--font-mono)' }}>smtp.hostinger.com:465</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>🏷️ Tag de Extração:</span>
+                      <strong style={{ color: 'var(--accent-amber-soft)' }}>{integrations.hostinger.filterTag}</strong>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <button 
+                      className="btn-primary" 
+                      style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}
+                      onClick={handleSimulateHostingerEmail}
+                    >
+                      ✉️ Simular E-mail #kairos
+                    </button>
+                    <button 
+                      className="btn-ghost" 
+                      style={{ fontSize: '0.75rem', padding: '0.4rem 0.6rem' }}
+                      onClick={() => alert('Filtro Hostinger configurado para lud@mktcx.com.br. E-mails de clientes serão automaticamente avaliados contra falsas urgências.')}
+                    >
+                      Configurar Regras
+                    </button>
+                  </div>
+                </div>
+
+                {/* CARD GMAIL & GOOGLE WORKSPACE */}
+                <div className="wizard-box" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                      <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'rgba(66, 133, 244, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Calendar size={20} color="#4285F4" />
+                      </div>
+                      <div>
+                        <strong style={{ fontSize: '0.95rem', display: 'block', color: 'var(--text-main)' }}>Google Workspace</strong>
+                        <span style={{ fontSize: '0.75rem', color: '#4285F4' }}>Gmail & Google Agenda</span>
+                      </div>
+                    </div>
+                    <span className="badge badge-sage">
+                      ● Sincronizado
+                    </span>
+                  </div>
+
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '0.85rem' }}>
+                    Bloqueio automático de Deep Work para impedir reuniões de terceiros e exportação de eventos para o app nativo do iPhone.
+                  </p>
+
+                  <div style={{ background: 'var(--bg-secondary)', padding: '0.75rem', borderRadius: '4px', fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>🛡️ Bloqueio Auto de Deep Work:</span>
+                      <strong style={{ color: 'var(--accent-sage-soft)' }}>Ativo (Manhãs protegidas)</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>📅 Formato de Exportação:</span>
+                      <strong style={{ color: 'var(--text-main)' }}>iCalendar (.ics) Universal</strong>
+                    </div>
+                  </div>
+
+                  <button 
+                    className="btn-secondary" 
+                    style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}
+                    onClick={() => calendarService.exportToICS(demands)}
+                  >
+                    <Download size={13} style={{ marginRight: '0.3rem' }} /> Baixar Calendário Atual (.ics)
+                  </button>
+                </div>
+
+                {/* CARD OUTLOOK */}
+                <div className="wizard-box" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                      <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'rgba(0, 120, 212, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Globe size={20} color="#0078D4" />
+                      </div>
+                      <div>
+                        <strong style={{ fontSize: '0.95rem', display: 'block', color: 'var(--text-main)' }}>Microsoft 365 / Outlook</strong>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{integrations.outlook.accountEmail}</span>
+                      </div>
+                    </div>
+                    <span className="badge badge-gray">
+                      Disponível
+                    </span>
+                  </div>
+
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '0.85rem' }}>
+                    Conexão corporativa para leitura de compromissos no Microsoft Exchange/Outlook e detecção de reuniões consecutivas sem respiro.
+                  </p>
+
+                  <div style={{ background: 'var(--bg-secondary)', padding: '0.75rem', borderRadius: '4px', fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>Sincronização:</span>
+                      <strong style={{ color: 'var(--text-muted)' }}>Pronto para ativar</strong>
+                    </div>
+                  </div>
+
+                  <button 
+                    className="btn-ghost" 
+                    style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}
+                    onClick={() => alert('Conexão Microsoft 365 pronta para OAuth Corporativo.')}
+                  >
+                    Conectar Conta Microsoft
+                  </button>
+                </div>
+
               </div>
             </div>
 
-            {/* Gemini API Key Integration Box */}
-            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '6px', padding: '1.25rem', marginBottom: '1.75rem' }}>
+            {/* SEÇÃO 2: APPLE APP STORE BANNER */}
+            <div style={{ background: 'linear-gradient(135deg, rgba(212,163,89,0.12) 0%, rgba(20,24,30,0.95) 100%)', border: '1px solid rgba(212,163,89,0.35)', borderRadius: '8px', padding: '1.25rem', marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+              <div style={{ maxWidth: '640px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
+                  <Apple size={20} color="var(--accent-amber-soft)" />
+                  <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: 'var(--accent-amber-soft)' }}>
+                    Aplicativo Nativo na Loja da Apple (App Store)
+                  </h3>
+                </div>
+                <p style={{ fontSize: '0.83rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                  Você pode usar o KAIROS hoje mesmo como PWA no Safari (100% grátis, tela cheia e ícone nativo) ou publicar o pacote oficial assinado na App Store da Apple via Capacitor.
+                </p>
+              </div>
+              <button 
+                className="btn-primary" 
+                onClick={() => setShowAppStoreModal(true)}
+                style={{ fontSize: '0.8rem', padding: '0.55rem 1.1rem' }}
+              >
+                Ver Custos & Passo a Passo
+              </button>
+            </div>
+
+            {/* SEÇÃO 3: GEMINI API KEY */}
+            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '6px', padding: '1.25rem', marginBottom: '2rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                 <Key size={16} color="var(--accent-amber-soft)" />
                 <h3 style={{ fontSize: '0.95rem', fontWeight: 600 }}>Conexão com Google Gemini API (Opcional)</h3>
@@ -1685,40 +2013,47 @@ export default function App() {
               </form>
             </div>
 
-            {/* Memory List */}
-            <div className="demand-list">
-              {memoryFacts.map(fact => (
-                <div key={fact.id} className="demand-card" style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ flex: 1, paddingRight: '1rem' }}>
-                    <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}>
-                      <span className="badge badge-amber">{fact.category}</span>
-                      <span className={`badge ${fact.confidence === 'Alta' ? 'badge-sage' : 'badge-gray'}`}>
-                        Confiança: {fact.confidence}
-                      </span>
+            {/* SEÇÃO 4: MEMÓRIA COGNITIVA TRANSPARENTE */}
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 600, marginBottom: '0.5rem' }}>Fatos & Premissas Aprendidas pela IA</h3>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                Aqui está o que o KAIROS infere sobre seus padrões. Você tem soberania total para validar ou questionar qualquer premissa.
+              </p>
+              
+              <div className="demand-list">
+                {memoryFacts.map(fact => (
+                  <div key={fact.id} className="demand-card" style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ flex: 1, paddingRight: '1rem' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}>
+                        <span className="badge badge-amber">{fact.category}</span>
+                        <span className={`badge ${fact.confidence === 'Alta' ? 'badge-sage' : 'badge-gray'}`}>
+                          Confiança: {fact.confidence}
+                        </span>
+                      </div>
+                      <p style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 500 }}>
+                        "{fact.insight}"
+                      </p>
                     </div>
-                    <p style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 500 }}>
-                      "{fact.insight}"
-                    </p>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button 
+                        className={`btn-ghost ${fact.userApproved ? 'badge-sage' : ''}`}
+                        onClick={() => setMemoryFacts(memoryFacts.map(f => f.id === fact.id ? { ...f, userApproved: !f.userApproved } : f))}
+                        style={{ fontSize: '0.8rem' }}
+                      >
+                        {fact.userApproved ? '✓ Confirmado por Você' : 'Questionar Premissa'}
+                      </button>
+                      <button 
+                        className="btn-ghost" 
+                        style={{ color: 'var(--accent-rose)' }}
+                        onClick={() => setMemoryFacts(memoryFacts.filter(f => f.id !== fact.id))}
+                        title="Apagar esta memória"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button 
-                      className={`btn-ghost ${fact.userApproved ? 'badge-sage' : ''}`}
-                      onClick={() => setMemoryFacts(memoryFacts.map(f => f.id === fact.id ? { ...f, userApproved: !f.userApproved } : f))}
-                      style={{ fontSize: '0.8rem' }}
-                    >
-                      {fact.userApproved ? '✓ Confirmado por Você' : 'Questionar Premissa'}
-                    </button>
-                    <button 
-                      className="btn-ghost" 
-                      style={{ color: 'var(--accent-rose)' }}
-                      onClick={() => setMemoryFacts(memoryFacts.filter(f => f.id !== fact.id))}
-                      title="Apagar esta memória"
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
             <div style={{ marginTop: '2rem', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '6px', padding: '1.25rem' }}>
@@ -1726,7 +2061,7 @@ export default function App() {
                 <ShieldCheck size={16} /> Privacidade & Fronteira Estrita de Dados
               </h4>
               <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                Seus sentimentos, reflexões, check-ins de energia e tarefas pessoais (como a porta do banheiro ou mural da vida) são hermeticamente isolados e nunca são exibidos para membros da sua equipe ou em relatórios compartilhados.
+                Seus sentimentos, reflexões, check-ins de energia, áudios do WhatsApp e tarefas pessoais (como a porta do banheiro ou mural da vida) são hermeticamente isolados e nunca são exibidos para membros da sua equipe ou em relatórios compartilhados.
               </p>
             </div>
           </div>
@@ -1850,13 +2185,52 @@ export default function App() {
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
-              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', padding: '0.75rem', borderRadius: '4px' }}>
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid rgba(212, 163, 89, 0.4)', padding: '0.75rem', borderRadius: '4px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
-                  <strong style={{ color: 'var(--accent-amber-soft)', fontSize: '0.85rem' }}>v1.2 iOS Pixel-Perfect (Atual)</strong>
+                  <strong style={{ color: 'var(--accent-amber-soft)', fontSize: '0.85rem' }}>v1.5 Executive Integrations & App Store (Atual)</strong>
                   <span className="badge badge-amber">Ativa</span>
                 </div>
                 <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                  Integração WhatsApp (+55 11 97555-6111), Hostinger (lud@mktcx.com.br), Google Workspace, Outlook e Guia Apple App Store.
+                </p>
+                <div style={{ marginTop: '0.4rem', fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                  Tag: v1.5-integrations-appstore • snapshots/v1.5-integrations-appstore/
+                </div>
+              </div>
+
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', padding: '0.75rem', borderRadius: '4px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
+                  <strong style={{ color: 'var(--text-main)', fontSize: '0.85rem' }}>v1.4 Evolution Dashboard & Neuro-Hacks</strong>
+                  <span className="badge badge-sage">Snapshot</span>
+                </div>
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                  Dashboard de evolução temporal (diário/semanal/mensal), neuro-hacks anti-sabotagem, timer Crappy Draft de 7 min e central de notificações inteligentes.
+                </p>
+                <div style={{ marginTop: '0.4rem', fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                  Tag: v1.4-anti-sabotage-dashboard • snapshots/v1.4-anti-sabotage-dashboard/
+                </div>
+              </div>
+
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', padding: '0.75rem', borderRadius: '4px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
+                  <strong style={{ color: 'var(--text-main)', fontSize: '0.85rem' }}>v1.3 iOS Pixel-Perfect</strong>
+                  <span className="badge badge-sage">Snapshot</span>
+                </div>
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
                   Mobile-first iOS Safari: Safe Area Insets, Telemetria Buffer 28%, The Big One, bottom navigation e modal sheets.
+                </p>
+                <div style={{ marginTop: '0.4rem', fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                  Tag: v1.3-ios-pixel-perfect • snapshots/v1.3-ios-pixel-perfect/
+                </div>
+              </div>
+
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', padding: '0.75rem', borderRadius: '4px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
+                  <strong style={{ color: 'var(--text-main)', fontSize: '0.85rem' }}>v1.2 iOS Ready</strong>
+                  <span className="badge badge-sage">Snapshot</span>
+                </div>
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                  PWA Web App Manifest, metatags iOS status bar preta e suporte de instalação.
                 </p>
                 <div style={{ marginTop: '0.4rem', fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
                   Tag: v1.2-ios-ready • snapshots/v1.2-ios-ready/
@@ -1895,6 +2269,129 @@ export default function App() {
                 Entendido
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ----------------- MODAL: GUIA APPLE APP STORE & CUSTOS ----------------- */}
+      {showAppStoreModal && (
+        <div className="modal-backdrop" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 110, padding: '1rem' }}>
+          <div className="wizard-box modal-sheet" style={{ width: '100%', maxWidth: '640px', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ background: 'var(--accent-amber-soft)', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Apple size={18} color="#000" />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 600 }}>KAIROS na Loja da Apple (App Store)</h3>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Análise técnica e financeira de viabilidade</span>
+                </div>
+              </div>
+              <button className="btn-ghost" onClick={() => setShowAppStoreModal(false)}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1.25rem' }}>
+              Para você ter o KAIROS no seu iPhone como um aplicativo da Apple, existem <strong>dois caminhos</strong> disponíveis. Avaliamos a viabilidade, a experiência do usuário e os custos exatos:
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
+              
+              {/* Opção 1: PWA */}
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid rgba(118, 142, 122, 0.4)', borderRadius: '6px', padding: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <strong style={{ fontSize: '0.95rem', color: 'var(--accent-sage-soft)' }}>
+                    Caminho 1: PWA Nativo no iPhone (Adicionar à Tela de Início)
+                  </strong>
+                  <span className="badge badge-sage">Custo: R$ 0,00 (Gratuito)</span>
+                </div>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '0.6rem' }}>
+                  <strong>Já está 100% pronto e funcionando agora!</strong> No Safari do iPhone, toque no botão <em>Compartilhar</em> (ícone com a seta) e escolha <em>"Adicionar à Tela de Início"</em>:
+                </p>
+                <ul style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', paddingLeft: '1.2rem', lineHeight: 1.6 }}>
+                  <li><strong>Aparência idêntica a app nativo</strong>: Abre em tela cheia (Standalone) sem nenhuma barra de URL ou botões do navegador.</li>
+                  <li><strong>Ícone exclusivo no iPhone</strong>: O ícone preto e dourado do KAIROS fica na sua tela principal como qualquer app.</li>
+                  <li><strong>Notificações Push nativas</strong>: Desde o iOS 16.4, o Safari do iPhone recebe notificações push na tela de bloqueio.</li>
+                  <li><strong>Instantâneo & Sem Burocracia</strong>: Não precisa esperar semanas por aprovações de comitês da Apple.</li>
+                </ul>
+              </div>
+
+              {/* Opção 2: App Store Oficial */}
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid rgba(212, 163, 89, 0.4)', borderRadius: '6px', padding: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <strong style={{ fontSize: '0.95rem', color: 'var(--accent-amber-soft)' }}>
+                    Caminho 2: Aplicativo Oficial na Apple App Store (Arquivo .IPA)
+                  </strong>
+                  <span className="badge badge-amber">Custo: US$ 99/ano Apple</span>
+                </div>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '0.6rem' }}>
+                  Para que qualquer pessoa possa procurar por "KAIROS" na busca da App Store e clicar no botão "Obter":
+                </p>
+
+                {/* Box de Custos */}
+                <div style={{ background: 'rgba(212, 163, 89, 0.08)', border: '1px solid rgba(212, 163, 89, 0.25)', padding: '0.75rem', borderRadius: '4px', marginBottom: '0.75rem', fontSize: '0.8rem' }}>
+                  <strong style={{ color: 'var(--accent-amber-soft)', display: 'block', marginBottom: '0.4rem' }}>
+                    Custos Financeiros Detalhados:
+                  </strong>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                    <span>1. Taxa Apple Developer Program:</span>
+                    <strong style={{ color: 'var(--text-main)' }}>US$ 99 / ano (~R$ 550 a R$ 600 anuais)</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                    <span>2. Framework de Empacotamento (Capacitor / Swift):</span>
+                    <strong style={{ color: 'var(--accent-sage-soft)' }}>R$ 0,00 (Gratuito / Open Source)</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>3. Hospedagem & Domínio (mktcx.com.br / Hostinger):</span>
+                    <strong style={{ color: 'var(--accent-sage-soft)' }}>R$ 0 adicional (já contratado)</strong>
+                  </div>
+                </div>
+
+                <strong style={{ fontSize: '0.8rem', color: 'var(--text-main)', display: 'block', marginBottom: '0.4rem' }}>
+                  Passo a passo técnico necessário:
+                </strong>
+                <ol style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', paddingLeft: '1.2rem', lineHeight: 1.6 }}>
+                  <li><strong>Empacotamento com Capacitor.js</strong>: Rodamos <code>npx cap add ios</code> neste projeto para gerar um container nativo em Swift/Xcode.</li>
+                  <li><strong>Inscrição no Apple Developer</strong>: Cadastro como Pessoa Física ou Jurídica (D-U-N-S da sua empresa) em <code>developer.apple.com</code> e pagamento da anuidade de US$ 99.</li>
+                  <li><strong>Build no Xcode</strong>: Compilação do arquivo <code>.ipa</code> assinado com seu certificado de desenvolvedor.</li>
+                  <li><strong>TestFlight (Fase Beta)</strong>: Disponibilização imediata no seu iPhone para validação de produção.</li>
+                  <li><strong>Revisão & Aprovação da Apple</strong>: Submissão com Política de Privacidade (em <code>mktcx.com.br/privacidade</code>) e capturas de tela para aprovação na App Store (24h a 48h).</li>
+                </ol>
+              </div>
+
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.6rem' }}>
+              <button className="btn-secondary" onClick={() => setShowAppStoreModal(false)}>
+                Fechar Guia
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Simulation Toasts */}
+      {showSimulateWhatsAppToast && (
+        <div style={{ position: 'fixed', bottom: '80px', right: '20px', zIndex: 120, background: '#102219', border: '1px solid #25D366', color: '#fff', padding: '0.85rem 1.25rem', borderRadius: '8px', boxShadow: '0 8px 30px rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', gap: '0.75rem', animation: 'fadeIn 0.3s ease-out' }}>
+          <div style={{ background: '#25D366', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Smartphone size={18} color="#000" />
+          </div>
+          <div>
+            <div style={{ fontWeight: 600, fontSize: '0.85rem' }}>Áudio WhatsApp Recebido (+55 11 97555-6111)</div>
+            <div style={{ fontSize: '0.75rem', color: '#A0AEC0' }}>Convertido em microação de 5 min na sua agenda de hoje!</div>
+          </div>
+        </div>
+      )}
+
+      {showSimulateHostingerToast && (
+        <div style={{ position: 'fixed', bottom: '80px', right: '20px', zIndex: 120, background: '#262014', border: '1px solid var(--accent-amber)', color: '#fff', padding: '0.85rem 1.25rem', borderRadius: '8px', boxShadow: '0 8px 30px rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', gap: '0.75rem', animation: 'fadeIn 0.3s ease-out' }}>
+          <div style={{ background: 'var(--accent-amber)', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Mail size={18} color="#000" />
+          </div>
+          <div>
+            <div style={{ fontWeight: 600, fontSize: '0.85rem' }}>E-mail Hostinger Triado (lud@mktcx.com.br)</div>
+            <div style={{ fontSize: '0.75rem', color: '#A0AEC0' }}>Falsa urgência desarmada! Alocado no bloco nobre de amanhã.</div>
           </div>
         </div>
       )}
