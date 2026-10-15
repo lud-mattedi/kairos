@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Binaries & archives
+cloudflared.exe
+*.zip
+public/qr-*.png
