@@ -430,14 +430,21 @@ export default function App() {
   const shallowMinutes = 105; // 1h45min
   const bufferMinutes = 90; // 1h30min buffer (28%)
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour >= 18) return 'Boa noite, Lud';
+    if (hour >= 12) return 'Boa tarde, Lud';
+    return 'Bom dia, Lud';
+  };
+
   return (
     <div className="app-shell">
       {/* Header */}
       <header className="app-header">
         <div className="container header-inner">
           <div className="brand">
-            <div className="brand-icon">
-              <Sparkles size={18} />
+            <div className="brand-icon" style={{ overflow: 'hidden', padding: 0, border: '1px solid rgba(212, 163, 89, 0.4)', background: '#0C0E12', borderRadius: '8px', width: '34px', height: '34px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src="./apple-touch-icon.png" alt="KAIROS OS" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '7px' }} />
             </div>
             <div>
               <h1 className="brand-title">KAIROS OS</h1>
@@ -454,7 +461,7 @@ export default function App() {
               style={{ cursor: 'pointer' }}
             >
               <History size={13} color="var(--accent-amber-soft)" />
-              <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>v1.2 iOS</span>
+              <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>v1.5 iOS</span>
             </button>
 
             {/* Energy Selector (Desktop) */}
@@ -615,7 +622,7 @@ export default function App() {
             {/* Executive Greeting Header (Stitch Mobile Pattern) */}
             <div className="executive-greeting">
               <div className="greeting-row">
-                <h1 className="greeting-title">Bom dia, Rodrigo</h1>
+                <h1 className="greeting-title">{getGreeting()}</h1>
                 <span className="greeting-date">
                   {new Date().toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' }).toUpperCase()}
                 </span>
