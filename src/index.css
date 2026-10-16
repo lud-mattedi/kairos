@@ -1,32 +1,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap');
 
 :root {
-  /* Executive Sanctuary Colors (Matching Google Stitch) */
-  --bg-primary: #0C0E12;          /* Slate Deep */
-  --bg-secondary: #101418;        /* Slate Canvas */
-  --bg-card: #181C23;             /* Slate Card */
-  --bg-card-hover: #222730;       /* Slate Elevated */
-  --border-subtle: #2E3542;       /* Slate Border Hairline */
-  --border-focus: #D4A359;        /* Burnished Amber Focus */
+  /* Noite Botânica — Paleta Oficial */
+  --bg-primary: #171E1B;          /* Fundo principal */
+  --bg-secondary: #101713;        /* Sidebar e superfícies profundas */
+  --bg-card: #222B27;             /* Cartões e painéis */
+  --bg-card-highlight: #2C3D33;   /* Superfície de destaque */
+  --bg-card-hover: #29342F;       /* Hover elegante */
   
-  --text-main: #F7F6F2;           /* Warm Ivory Text */
-  --text-secondary: #A8B0BC;      /* Slate Mist */
-  --text-muted: #646E7E;          /* Muted Telemetry */
-  --text-dim: #4F5868;            
+  --text-main: #F1EDE4;           /* Texto principal (Marfim nobre) */
+  --text-secondary: #B0B8AA;      /* Texto secundário (Sálvia sutil) */
+  --text-muted: #788574;          /* Telemetria e detalhes */
+  --text-dim: #4E594C;            
   
-  --accent-amber: #D4A359;        /* Primary Burnished Amber */
-  --accent-amber-soft: #E5BE7E;   /* Champagne Gold */
-  --accent-amber-dim: #47351A;    /* Amber Pill Fill */
+  --border-subtle: #36443C;       /* Bordas e divisórias */
+  --border-focus: #D2AD78;        /* Foco Champagne */
   
-  --accent-sage: #768E7A;         /* Nordic Sage (Buffer & Equilibrium) */
-  --accent-sage-soft: #9AB09E;    /* Sage Highlight */
-  --accent-sage-dim: #1E2920;     /* Sage Pill Fill */
+  /* Destaque Champagne */
+  --accent-champagne: #D2AD78;
+  --accent-champagne-hover: #E1C391;
+  --text-on-champagne: #1A261D;
+  --accent-champagne-dim: rgba(210, 173, 120, 0.15);
+  --accent-amber: #D2AD78;        /* Compatibilidade com componentes */
+  --accent-amber-soft: #E1C391;
+  --accent-amber-dim: rgba(210, 173, 120, 0.15);
   
-  --accent-mist: #8A9BA8;         /* Nordic Mist (Tertiary) */
-  --accent-rose: #E06C75;         /* Soft Crimson for Warnings */
+  /* Verdes Botânicos */
+  --accent-sage: #8AA78E;         /* Verde Sálvia */
+  --accent-success: #A9C69B;      /* Verde de Sucesso */
+  --accent-aux: #33463B;          /* Verde Auxiliar */
+  --accent-sage-soft: #A9C69B;
+  --accent-sage-dim: rgba(138, 167, 142, 0.18);
+  
+  /* Escala de Intensidade para Calendário de Hábitos */
+  --habit-l1: #31483C;
+  --habit-l2: #4D6A56;
+  --habit-l3: #74947A;
+  --habit-l4: #B6C8A2;
+  
+  --accent-mist: #8AA78E;
+  --accent-rose: #D97D7D;         /* Carmesim suave para alertas */
   
   --font-serif: 'Newsreader', Georgia, serif;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 

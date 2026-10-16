@@ -172,4 +172,38 @@ export interface IntegrationConfig {
   };
 }
 
+export interface Habit {
+  id: string;
+  title: string;
+  domain: LifeDomain;
+  frequency: 'Diário' | 'Dias Úteis' | 'Semanal' | '3x por semana';
+  targetDaysPerWeek: number;
+  streak: number;
+  bestStreak: number;
+  active: boolean;
+  history: Record<string, boolean>; // 'YYYY-MM-DD': true
+  createdAt: string;
+  identityAnchor?: string;
+}
+
+export interface AnalyticsEvent {
+  id: string;
+  type: 
+    | 'TASK_CREATED' 
+    | 'TASK_STATUS_CHANGED' 
+    | 'TASK_COMPLETED' 
+    | 'TASK_POSTPONED' 
+    | 'FOCUS_SESSION_START' 
+    | 'FOCUS_SESSION_END' 
+    | 'HABIT_COMPLETED' 
+    | 'HABIT_UNCOMPLETED' 
+    | 'HABIT_RESUMED';
+  entityId?: string;
+  entityTitle?: string;
+  domain?: LifeDomain;
+  minutes?: number;
+  timestamp: string; // ISO
+  notes?: string;
+}
+
 

@@ -7,7 +7,8 @@ import type {
   EvolutionMetrics,
   SmartNotification,
   AntiSabotageTactic,
-  IntegrationConfig
+  IntegrationConfig,
+  Habit
 } from './types';
 
 export const INITIAL_DEMANDS: Demand[] = [
@@ -364,4 +365,96 @@ export const INITIAL_INTEGRATIONS: IntegrationConfig = {
     status: 'desconectado',
   },
 };
+
+export const INITIAL_HABITS: Habit[] = [
+  {
+    id: 'hab-1',
+    title: 'Proteger o Primeiro Bloco de Deep Work (90 min)',
+    domain: 'Trabalho',
+    frequency: 'Dias Úteis',
+    targetDaysPerWeek: 5,
+    streak: 6,
+    bestStreak: 12,
+    active: true,
+    history: {
+      '2026-10-12': true,
+      '2026-10-13': true,
+      '2026-10-14': true,
+      '2026-10-15': true,
+      '2026-10-16': true
+    },
+    createdAt: '2026-10-01',
+    identityAnchor: 'Eu sou uma executiva que protege seu foco antes de atender ao mundo.'
+  },
+  {
+    id: 'hab-2',
+    title: 'Descompressão e Hidratação Matinal sem Celular (20 min)',
+    domain: 'Saúde',
+    frequency: 'Diário',
+    targetDaysPerWeek: 7,
+    streak: 9,
+    bestStreak: 14,
+    active: true,
+    history: {
+      '2026-10-11': true,
+      '2026-10-12': true,
+      '2026-10-13': true,
+      '2026-10-14': true,
+      '2026-10-15': true,
+      '2026-10-16': true
+    },
+    createdAt: '2026-10-01',
+    identityAnchor: 'Eu começo o dia com clareza fisiológica, sem sobrecarga de dopamina rápida.'
+  },
+  {
+    id: 'hab-3',
+    title: 'Checagem de Autonomia da Equipe (Lívia & Marcos)',
+    domain: 'Liderança',
+    frequency: '3x por semana',
+    targetDaysPerWeek: 3,
+    streak: 4,
+    bestStreak: 8,
+    active: true,
+    history: {
+      '2026-10-13': true,
+      '2026-10-15': true
+    },
+    createdAt: '2026-10-02',
+    identityAnchor: 'Eu lidero transferindo autoridade e desbloqueando gargalos, não microgerenciando.'
+  },
+  {
+    id: 'hab-4',
+    title: 'Leitura & Estudo Estratégico do Tema X',
+    domain: 'Desenvolvimento',
+    frequency: '3x por semana',
+    targetDaysPerWeek: 3,
+    streak: 3,
+    bestStreak: 5,
+    active: true,
+    history: {
+      '2026-10-13': true,
+      '2026-10-15': true
+    },
+    createdAt: '2026-10-03',
+    identityAnchor: 'Eu evoluo minhas competências sem usar o estudo como fuga das decisões difíceis.'
+  },
+  {
+    id: 'hab-5',
+    title: 'Shutdown Noturno sem Culpa às 18:30',
+    domain: 'Casa/Vida',
+    frequency: 'Dias Úteis',
+    targetDaysPerWeek: 5,
+    streak: 5,
+    bestStreak: 10,
+    active: true,
+    history: {
+      '2026-10-12': true,
+      '2026-10-13': true,
+      '2026-10-14': true,
+      '2026-10-15': true
+    },
+    createdAt: '2026-10-01',
+    identityAnchor: 'Eu encerro o expediente de forma deliberada, protegendo minha sanidade e meu sono.'
+  }
+];
 
